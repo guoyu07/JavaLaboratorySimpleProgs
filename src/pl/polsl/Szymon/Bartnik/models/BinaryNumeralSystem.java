@@ -27,8 +27,8 @@ public class BinaryNumeralSystem extends NumeralSystem{
      * @return passed number representation in numeral system 
      * identified by outputNumeralSystem argument
      * 
-     * @throws NumberFormatException
-     * @throws NullPointerException
+     * @throws NumberFormatException when found not allowed character in input binary number
+     * @throws NullPointerException when any of parameters is null
      */
     @Override
     public String convertToSpecifiedNumSystem(String numberToConvert, NumeralSystem outputNumeralSystem) {

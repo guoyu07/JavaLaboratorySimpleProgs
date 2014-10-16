@@ -13,8 +13,8 @@ public class NumeralSystemFactory {
      * @param numeralSystem identifies concrete implementation of NumeralSystem class
      * @return instance of implementation of NumeralSystem class
      * 
-     * @throws NullPointerException
-     * @throws IllegalArgumentException
+     * @throws NullPointerException when input string is null
+     * @throws IllegalArgumentException when specified numeral system is not supported
      */
     public static NumeralSystem GetObject(String numeralSystem) 
             throws NullPointerException, IllegalArgumentException{
