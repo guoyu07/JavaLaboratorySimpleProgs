@@ -14,7 +14,7 @@ public class DecimalNumeralSystem extends NumeralSystem{
      * @return decimal system full name
      */
     @Override
-    public String getSystemName() {
+    protected String getSystemName() {
         return "Decimal";
     }
     
@@ -33,11 +33,13 @@ public class DecimalNumeralSystem extends NumeralSystem{
     @Override
     public String convertToSpecifiedNumSystem(String numberToConvert, NumeralSystem outputNumeralSystem) {
         
-        if(outputNumeralSystem == null)
+        if(outputNumeralSystem == null) {
             throw new NullPointerException("Output numeral system string cannot be null object.");
+        }
         
-        if(numberToConvert == null)
+        if(numberToConvert == null) {
             throw new NullPointerException("Number to convert cannot be null object");
+        }
         
         int numberToConvertAsDecimal = Integer.parseInt(numberToConvert);
         return outputNumeralSystem.convertFromDecimal(numberToConvertAsDecimal);

@@ -16,13 +16,14 @@ public class NumeralSystemFactory {
      * @throws NullPointerException when input string is null
      * @throws IllegalArgumentException when specified numeral system is not supported
      */
-    public static NumeralSystem GetObject(String numeralSystem) 
+    public static NumeralSystem getObject(String numeralSystem) 
             throws NullPointerException, IllegalArgumentException{
         
-        if(numeralSystem == null)
+        if(numeralSystem == null) {
             throw new NullPointerException("Numeral system string cannot be null object");
+        }
         
-        switch(numeralSystem){
+        switch(numeralSystem) {
             case "bin": 
                 return new BinaryNumeralSystem();
             case "dec": 

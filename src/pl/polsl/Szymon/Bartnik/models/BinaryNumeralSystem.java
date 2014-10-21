@@ -5,6 +5,7 @@ package pl.polsl.Szymon.Bartnik.models;
  * computing binary system from/to other numeral systems.
  * 
  * @author Szymon Bartnik (grupa 2)
+ * @version 1.0
  */
 public class BinaryNumeralSystem extends NumeralSystem{
 
@@ -14,7 +15,7 @@ public class BinaryNumeralSystem extends NumeralSystem{
      * @return binary system full name
      */
     @Override
-    public String getSystemName() {
+    protected String getSystemName() {
         return "Binary";
     }
     
@@ -33,22 +34,27 @@ public class BinaryNumeralSystem extends NumeralSystem{
     @Override
     public String convertToSpecifiedNumSystem(String numberToConvert, NumeralSystem outputNumeralSystem) {
         
-        if(outputNumeralSystem == null)
+        if(outputNumeralSystem == null) {
             throw new NullPointerException("Output numeral system string cannot be null object.");
+        }
         
-        if(numberToConvert == null)
+        if(numberToConvert == null) {
             throw new NullPointerException("Number to convert cannot be null object");
+        }
         
         double numberToConvertAsDecimal = 0;
        
         // in loop read every character to convert to decimal
-        for(int i=0; i<numberToConvert.length(); i++){
+        for(int i=0; i<numberToConvert.length(); i++) {
             char currentCharacter = numberToConvert.charAt(i);
             
-            if(currentCharacter == '1')
+            if(currentCharacter == '1') {
                 numberToConvertAsDecimal += Math.pow(2, numberToConvert.length()-1-i);
-            else if(currentCharacter != '0') // if used illegal character in binary number
-                throw new NumberFormatException("Not allowed character in input binary number found: '" + currentCharacter + "'");
+            }
+            else if(currentCharacter != '0') { // if used illegal character in binary number
+                throw new NumberFormatException("Not allowed character in input binary "
+                        + "number found: '" + currentCharacter + "'");
+            }
         }
         return outputNumeralSystem.convertFromDecimal((int)numberToConvertAsDecimal);
     }

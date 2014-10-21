@@ -13,7 +13,7 @@ public abstract class NumeralSystem {
      * 
      * @return numeral system full name
      */
-    public abstract String getSystemName();
+    protected abstract String getSystemName();
     
     /**
      * Converts passed number from numeral system identified by current type of this class.
@@ -38,4 +38,9 @@ public abstract class NumeralSystem {
      * @return input integer number converted to the needed numeral system.
      */
     public abstract String convertFromDecimal(int numberToConvert);
+
+    @Override
+    public String toString() {
+        return getSystemName();
+    }
 }
