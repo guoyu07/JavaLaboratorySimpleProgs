@@ -42,7 +42,7 @@ public class BinaryNumeralSystem extends NumeralSystem{
             throw new NullPointerException("Number to convert cannot be null object");
         }
         
-        double numberToConvertAsDecimal = 0;
+        Double numberToConvertAsDecimal = 0.0;
        
         // in loop read every character to convert to decimal
         for(int i=0; i<numberToConvert.length(); i++) {
@@ -56,7 +56,7 @@ public class BinaryNumeralSystem extends NumeralSystem{
                         + "number found: '" + currentCharacter + "'");
             }
         }
-        return outputNumeralSystem.convertFromDecimal((int)numberToConvertAsDecimal);
+        return outputNumeralSystem.convertFromDecimal(Double.valueOf(numberToConvertAsDecimal).longValue());
     }
 
     /**
@@ -66,14 +66,14 @@ public class BinaryNumeralSystem extends NumeralSystem{
      * @return input integer number converted to the binary system.
      */
     @Override
-    public String convertFromDecimal(int numberToConvert) {
+    public String convertFromDecimal(Long numberToConvert) {
         
-        int numberToConvertAsBinary[] = new int[25];
+        Long numberToConvertAsBinary[] = new Long[200];
         int index = 0;
         
         // compute binary number from decimal
         while(numberToConvert > 0){
-            numberToConvertAsBinary[index++] = numberToConvert%2;
+            numberToConvertAsBinary[index++] = (numberToConvert%2);
             numberToConvert = numberToConvert/2;
         }
         

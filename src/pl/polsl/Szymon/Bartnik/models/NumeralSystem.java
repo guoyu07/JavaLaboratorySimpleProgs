@@ -1,5 +1,7 @@
 package pl.polsl.Szymon.Bartnik.models;
 
+import java.math.BigInteger;
+
 /**
  * Abstract class representing numeral system and implementing methods
  * used for computing representation of numeral systems in other systems.
@@ -37,7 +39,7 @@ public abstract class NumeralSystem {
      * @param numberToConvert number in decimal system which we want to convert to other numeral system.
      * @return input integer number converted to the needed numeral system.
      */
-    public abstract String convertFromDecimal(int numberToConvert);
+    public abstract String convertFromDecimal(Long numberToConvert);
 
     @Override
     public String toString() {

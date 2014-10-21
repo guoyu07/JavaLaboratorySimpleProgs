@@ -1,5 +1,7 @@
 package pl.polsl.Szymon.Bartnik.models;
 
+import java.math.BigInteger;
+
 /**
  * Class representing decimal numeral system and implementing methods used for
  * computing decimal system from/to other numeral systems.
@@ -41,7 +43,7 @@ public class DecimalNumeralSystem extends NumeralSystem{
             throw new NullPointerException("Number to convert cannot be null object");
         }
         
-        int numberToConvertAsDecimal = Integer.parseInt(numberToConvert);
+        Long numberToConvertAsDecimal = Long.parseLong(numberToConvert);
         return outputNumeralSystem.convertFromDecimal(numberToConvertAsDecimal);
     }
 
@@ -52,9 +54,9 @@ public class DecimalNumeralSystem extends NumeralSystem{
      * @return input integer number converted to the decimal system.
      */
     @Override
-    public String convertFromDecimal(int numberToConvert) {
+    public String convertFromDecimal(Long numberToConvert) {
         
         // no conversion needed in this specific case (base system is decimal)
-        return Integer.toString(numberToConvert);
+        return numberToConvert.toString();
     }
 }
