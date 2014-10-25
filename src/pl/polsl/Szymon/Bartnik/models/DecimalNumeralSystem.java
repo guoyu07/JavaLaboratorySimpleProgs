@@ -7,6 +7,7 @@ import java.math.BigInteger;
  * computing decimal system from/to other numeral systems.
  * 
  * @author Szymon Bartnik (grupa 2)
+ * @version 1.0
  */
 public class DecimalNumeralSystem extends NumeralSystem{
 

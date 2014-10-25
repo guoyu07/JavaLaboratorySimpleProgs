@@ -7,6 +7,7 @@ import java.math.BigInteger;
  * used for computing representation of numeral systems in other systems.
  * 
  * @author Szymon Bartnik (grupa 2)
+ * @version 1.0
  */
 public abstract class NumeralSystem {
     

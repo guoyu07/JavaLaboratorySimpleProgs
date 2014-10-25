@@ -4,6 +4,7 @@ package pl.polsl.Szymon.Bartnik.models;
  * Static class with static method implementing abstract factory design pattern
  * 
  * @author Szymon Bartnik (grupa 2)
+ * @version 1.0
  */
 public class NumeralSystemFactory {
     

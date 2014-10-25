@@ -3,19 +3,27 @@ package pl.polsl.Szymon.Bartnik.views;
 import pl.polsl.Szymon.Bartnik.controller.CalculatorController;
 
 /**
- * Application is simple calculator of numeral systems which can operate
- * (for now) on decimal and binary numbers using object-oriented architecture.
+ * View class using to cooperate with the user (user interface class).
  * 
  * @author Szymon Bartnik (grupa 2)
+ * @version 1.0
  */
 public class ViewManager {
     
+    // arguments passed to the main method
     private final String[] args;
     
+    /**
+     * Constructor taking arguments passed to the main method.
+     * @param args run arguments passed usually to the main method
+     */
     public ViewManager(String[] args) {
         this.args = args;
     }
     
+    /**
+     * Prints run arguments passed to the program.
+     */
     public void printPassedParameters() {
         
         System.out.println("Program parameters: ");
@@ -26,6 +34,15 @@ public class ViewManager {
         }
     }    
 
+    /**
+     * Parses numbers and prints result using passed instance of CalculationController.
+     * 
+     * 
+     * @param calcController instance of CalculationController class 
+     * @throws NumberFormatException if in any step of conversion occured an error connected
+     * with wrong format of converted number.
+     * @throws NullPointerException if passed null argument
+     */
     public void parseNumbersAndPrintResults(CalculatorController calcController) 
         throws NumberFormatException, NullPointerException {
         
