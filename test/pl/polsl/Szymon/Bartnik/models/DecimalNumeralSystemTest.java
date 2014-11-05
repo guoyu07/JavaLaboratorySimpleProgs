@@ -5,13 +5,18 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- *
+ * Set of tests for DecimalNumeralSystem class
+ * 
  * @author Szymon
+ * @version 1.0
  */
 public class DecimalNumeralSystemTest {
     
     private DecimalNumeralSystem instance;
     
+    /**
+     * Setup which invokes before each test from this class
+     */
     @Before
     public void setUp() {
         instance = new DecimalNumeralSystem();
@@ -36,7 +41,8 @@ public class DecimalNumeralSystemTest {
      * Test of convertToSpecifiedNumSystem method, of class DecimalNumeralSystem.
      */
     @Test
-    public void testConvertToSpecifiedNumSystem() {
+    public void testConvertToSpecifiedNumSystem() 
+            throws NumberFormatException, NullPointerException, NegativeNumberException {
         // assign
         NumeralSystem outputNumeralSystem1 = new DecimalNumeralSystem();
         NumeralSystem outputNumeralSystem2 = new BinaryNumeralSystem();
@@ -74,23 +80,136 @@ public class DecimalNumeralSystemTest {
     @Test
     public void testConvertFromDecimal() {
         // assign
-        Long numberToConvert1 = 0L;
-        Long numberToConvert2 = 334L;
-        Long numberToConvert3 = 532423L;
+        Long numberToConvert1 = -34L;
+        Long numberToConvert2 = 0L;
+        Long numberToConvert3 = 334L;
+        Long numberToConvert4 = 532423L;
         
         String expResult1 = "0";
-        String expResult2 = "334";
-        String expResult3 = "532423";
+        String expResult2 = "0";
+        String expResult3 = "334";
+        String expResult4 = "532423";
         
         // act
         String result1 = instance.convertFromDecimal(numberToConvert1);
         String result2 = instance.convertFromDecimal(numberToConvert2);
         String result3 = instance.convertFromDecimal(numberToConvert3);
+        String result4 = instance.convertFromDecimal(numberToConvert4);
         
         // assert
         assertEquals(expResult1, result1);
         assertEquals(expResult2, result2);
         assertEquals(expResult3, result3);
+        assertEquals(expResult4, result4);
     }
     
+    /**
+     * Tests if method convertToSpecifiedNumSystem from DecimalNumeralSystem
+     * throws an exception if output numeral system string is null
+     * 
+     * @throws NumberFormatException
+     * @throws NullPointerException
+     * @throws NegativeNumberException
+     */
+    @Test(expected = NullPointerException.class)
+    public void testThrowsExceptionIfOutputNumeralSystemIsNull() 
+            throws NumberFormatException, NullPointerException, NegativeNumberException{
+        // assign
+        NumeralSystem outputNumeralSystem = null;
+        String numberToConvert = "45346673";
+        
+        // act
+        instance.convertToSpecifiedNumSystem(numberToConvert, outputNumeralSystem);
+        
+        // assert
+        fail("Should have thrown an exception because passed numeral system is null");
+    }
+    
+    /**
+     * Tests if method convertToSpecifiedNumSystem from DecimalNumeralSystem
+     * throws an exception if number to convert string is null
+     * 
+     * @throws NumberFormatException
+     * @throws NullPointerException
+     * @throws NegativeNumberException
+     */
+    @Test(expected = NullPointerException.class)
+    public void testThrowsExceptionIfNumberToConvertIsNull() 
+            throws NumberFormatException, NullPointerException, NegativeNumberException{
+        // assign
+        NumeralSystem outputNumeralSystem = new BinaryNumeralSystem();
+        String numberToConvert = null;
+        
+        // act
+        instance.convertToSpecifiedNumSystem(numberToConvert, outputNumeralSystem);
+        
+        // assert
+        fail("Should have thrown an exception because passed number to convert is null");
+    }
+    
+    /**
+     * Tests if method convertToSpecifiedNumSystem from DecimalNumeralSystem
+     * throws an exception if number to convert string is negative.
+     * 
+     * @throws NumberFormatException
+     * @throws NullPointerException
+     * @throws NegativeNumberException
+     */
+    @Test(expected = NegativeNumberException.class)
+    public void testThrowsExceptionIfPassedNegativeNumberToConvert() 
+            throws NumberFormatException, NullPointerException, NegativeNumberException{
+        // assign
+        NumeralSystem outputNumeralSystem = new DecimalNumeralSystem();
+        String numberToConvert = "-2434";
+        
+        // act
+        instance.convertToSpecifiedNumSystem(numberToConvert, outputNumeralSystem);
+        
+        // assert
+        fail("Should have thrown an exception because passed number to convert is negative");
+    }
+    
+    /**
+     * Tests if method convertToSpecifiedNumSystem from DecimalNumeralSystem
+     * throws an exception if number to convert string is empty.
+     * 
+     * @throws NumberFormatException
+     * @throws NullPointerException
+     * @throws NegativeNumberException
+     */
+    @Test(expected = NumberFormatException.class)
+    public void testThrowsExceptionIfPassedNumberToConvertIsZeroLength() 
+            throws NumberFormatException, NullPointerException, NegativeNumberException{
+        // assign
+        NumeralSystem outputNumeralSystem = new DecimalNumeralSystem();
+        String numberToConvert = "";
+        
+        // act
+        instance.convertToSpecifiedNumSystem(numberToConvert, outputNumeralSystem);
+        
+        // assert
+        fail("Should have thrown an exception because passed number to convert is empty");
+    }
+    
+    /**
+     * Tests if method convertToSpecifiedNumSystem from DecimalNumeralSystem
+     * throws an exception if number to convert contains illegal characters.
+     *
+     * @throws NumberFormatException
+     * @throws NullPointerException
+     * @throws NegativeNumberException
+     */
+    @Test(expected = NumberFormatException.class)
+    public void testThrowsExceptionIfPassedNumberToConvertHasIllegalCharacters() 
+            throws NumberFormatException, NullPointerException, NegativeNumberException{
+        // assign
+        NumeralSystem outputNumeralSystem = new DecimalNumeralSystem();
+        String numberToConvert = "3235f3425";
+        
+        // act
+        instance.convertToSpecifiedNumSystem(numberToConvert, outputNumeralSystem);
+        
+        // assert
+        fail("Should have thrown an exception because passed number to convert has illegal characters");
+    }
 }

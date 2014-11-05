@@ -30,16 +30,26 @@ public class BinaryNumeralSystem extends NumeralSystem{
      * 
      * @throws NumberFormatException when found not allowed character in input binary number
      * @throws NullPointerException when any of parameters is null
+     * @throws NegativeNumberException when number to convert is negative (not supported).
      */
     @Override
-    public String convertToSpecifiedNumSystem(String numberToConvert, NumeralSystem outputNumeralSystem) {
+    public String convertToSpecifiedNumSystem(String numberToConvert, NumeralSystem outputNumeralSystem)
+        throws NumberFormatException, NullPointerException, NegativeNumberException {
         
         if(outputNumeralSystem == null) {
-            throw new NullPointerException("Output numeral system string cannot be null object.");
+            throw new NullPointerException("Output numeral system cannot be null object.");
         }
         
         if(numberToConvert == null) {
             throw new NullPointerException("Number to convert cannot be null object");
+        }
+        
+        if(numberToConvert.length() == 0){
+            throw new NumberFormatException("Number to convert cannot be 0 length string");
+        }
+        
+        if(numberToConvert.length() > 1 && numberToConvert.charAt(0) == '-'){
+            throw new NegativeNumberException("Negative numbers are not supported");
         }
         
         Double numberToConvertAsDecimal = 0.0;
@@ -67,6 +77,11 @@ public class BinaryNumeralSystem extends NumeralSystem{
      */
     @Override
     public String convertFromDecimal(Long numberToConvert) {
+        
+        // we doesn't support numbers lower than 0
+        if(numberToConvert < 0){
+            numberToConvert = 0L;
+        }
         
         if(numberToConvert == 0){
             return "0";

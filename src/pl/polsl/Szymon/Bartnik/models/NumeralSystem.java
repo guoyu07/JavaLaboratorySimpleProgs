@@ -29,9 +29,10 @@ public abstract class NumeralSystem {
      * 
      * @throws NumberFormatException when detected illegal characters in number to convert
      * @throws NullPointerException when any of parameters is null
+     * @throws NegativeNumberException when number to convert is negative (not supported).
      */
     public abstract String convertToSpecifiedNumSystem(String numberToConvert, NumeralSystem outputNumeralSystem) 
-            throws NumberFormatException, NullPointerException;
+            throws NumberFormatException, NullPointerException, NegativeNumberException;
     
     /**
      * Converts passed integer number (in decimal system) to the needed numeral system

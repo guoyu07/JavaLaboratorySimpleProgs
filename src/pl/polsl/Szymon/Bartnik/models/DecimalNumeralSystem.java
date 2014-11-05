@@ -32,9 +32,11 @@ public class DecimalNumeralSystem extends NumeralSystem{
      * 
      * @throws NumberFormatException when detected illegal characters in number to convert
      * @throws NullPointerException when any of parameters is null
+     * @throws NegativeNumberException when number to convert is negative (not supported).
      */
     @Override
-    public String convertToSpecifiedNumSystem(String numberToConvert, NumeralSystem outputNumeralSystem) {
+    public String convertToSpecifiedNumSystem(String numberToConvert, NumeralSystem outputNumeralSystem) 
+            throws NumberFormatException, NullPointerException, NegativeNumberException {
         
         if(outputNumeralSystem == null) {
             throw new NullPointerException("Output numeral system string cannot be null object.");
@@ -45,6 +47,11 @@ public class DecimalNumeralSystem extends NumeralSystem{
         }
         
         Long numberToConvertAsDecimal = Long.parseLong(numberToConvert);
+        
+        if(numberToConvertAsDecimal < 0){
+            throw new NegativeNumberException();
+        }
+        
         return outputNumeralSystem.convertFromDecimal(numberToConvertAsDecimal);
     }
 
@@ -56,6 +63,11 @@ public class DecimalNumeralSystem extends NumeralSystem{
      */
     @Override
     public String convertFromDecimal(Long numberToConvert) {
+        
+        // we doesn't support numbers lower than 0
+        if(numberToConvert < 0){
+            numberToConvert = 0L;
+        }
         
         // no conversion needed in this specific case (base system is decimal)
         return numberToConvert.toString();
