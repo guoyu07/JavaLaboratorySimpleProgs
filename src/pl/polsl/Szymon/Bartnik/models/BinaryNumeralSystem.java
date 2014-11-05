@@ -56,7 +56,7 @@ public class BinaryNumeralSystem extends NumeralSystem{
                         + "number found: '" + currentCharacter + "'");
             }
         }
-        return outputNumeralSystem.convertFromDecimal(Double.valueOf(numberToConvertAsDecimal).longValue());
+        return outputNumeralSystem.convertFromDecimal(numberToConvertAsDecimal.longValue());
     }
 
     /**
@@ -67,6 +67,10 @@ public class BinaryNumeralSystem extends NumeralSystem{
      */
     @Override
     public String convertFromDecimal(Long numberToConvert) {
+        
+        if(numberToConvert == 0){
+            return "0";
+        }
         
         Long numberToConvertAsBinary[] = new Long[200];
         int index = 0;
