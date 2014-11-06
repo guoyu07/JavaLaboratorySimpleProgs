@@ -1,8 +1,11 @@
 package pl.polsl.Szymon.Bartnik.models;
 
 /**
- *
- * @author Szymon
+ * Exception occuring when negative number
+ * is prohibited in current context
+ * 
+ * @author Szymon Bartnik (grupa 2)
+ * @version 1.0
  */
 public class NegativeNumberException extends Exception {
 

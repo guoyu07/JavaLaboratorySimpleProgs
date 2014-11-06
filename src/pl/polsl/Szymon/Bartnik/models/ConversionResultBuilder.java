@@ -3,7 +3,7 @@ package pl.polsl.Szymon.Bartnik.models;
 /**
  * Used to create instance of ConversionResult
  * 
- * @author Szymon
+ * @author Szymon Bartnik (grupa 2)
  * @version 1.0
  */
 public class ConversionResultBuilder {

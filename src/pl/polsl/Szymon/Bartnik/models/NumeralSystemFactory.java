@@ -24,13 +24,33 @@ public class NumeralSystemFactory {
             throw new NullPointerException("Numeral system string cannot be null object");
         }
         
+        NumeralSystem numeralSystemToReturn = null;
+        
         switch(numeralSystem) {
             case "bin": 
-                return new BinaryNumeralSystem();
+                numeralSystemToReturn = new BinaryNumeralSystem();
+                break;
             case "dec": 
-                return new DecimalNumeralSystem();
+                numeralSystemToReturn = new DecimalNumeralSystem();
+                break;
+            case "notImplemented":
+                numeralSystemToReturn = new NotImplementedNumeralSystem();
+                break;
             default: 
                 throw new IllegalArgumentException("Specified numeral system not supported: '" + numeralSystem + "'");
         }
+        
+        // checking if selected class has not been deactivated
+        Class runtimeClass = numeralSystemToReturn.getClass();
+        if(runtimeClass.isAnnotationPresent(AdditionalInfo.class)) {
+            
+            AdditionalInfo addInfo = (AdditionalInfo) runtimeClass.getAnnotation(AdditionalInfo.class);
+            
+            if(addInfo.exclusion() == AdditionalInfo.Exclusion.ACTIVE){
+                throw new IllegalArgumentException("The " + runtimeClass.getName() + " class has been deactivated");
+            }
+        }
+        
+        return numeralSystemToReturn;
     }
 }

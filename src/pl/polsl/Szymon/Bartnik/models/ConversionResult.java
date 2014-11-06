@@ -1,9 +1,11 @@
 package pl.polsl.Szymon.Bartnik.models;
 
+import java.lang.reflect.AnnotatedElement;
+
 /**
  * Class storing result of internumeral system conversion.
  * 
- * @author Szymon
+ * @author Szymon Bartnik (grupa 2)
  * @version 1.0
  */
 public class ConversionResult {
