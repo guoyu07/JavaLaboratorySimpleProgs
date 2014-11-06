@@ -1,7 +1,5 @@
 package pl.polsl.Szymon.Bartnik.models;
 
-import java.math.BigInteger;
-
 /**
  * Abstract class representing numeral system and implementing methods
  * used for computing representation of numeral systems in other systems.

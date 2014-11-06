@@ -38,7 +38,7 @@ public class CalculatorController {
      * instance of the class.
      * 
      * @param inputNumber
-     * @return conversion result class with all required information
+     * @return conversion result class storing all required information
      * @throws NegativeNumberException if passed negative number
      */
     public ConversionResult convertNumber(String inputNumber) 

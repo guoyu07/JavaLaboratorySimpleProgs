@@ -14,6 +14,14 @@ public class ConversionResult {
     private final String inputNumber;
     private final String outputNumber;
     
+    /**
+     * Constructor creating result of internumeral system conversion
+     * 
+     * @param inNumSys input numeral system
+     * @param outNumSys output numeral system
+     * @param inNum input number
+     * @param outNum output number
+     */
     public ConversionResult(NumeralSystem inNumSys, NumeralSystem outNumSys, String inNum, String outNum) {
         
         this.inputNumeralSystem = inNumSys;
@@ -23,6 +31,8 @@ public class ConversionResult {
     }
 
     /**
+     * Gets input numeral system
+     * 
      * @return the inputNumeralSystem
      */
     public NumeralSystem getInputNumeralSystem() {
@@ -30,6 +40,8 @@ public class ConversionResult {
     }
 
     /**
+     * Gets output numeral system
+     * 
      * @return the outputNumeralSystem
      */
     public NumeralSystem getOutputNumeralSystem() {
@@ -37,6 +49,8 @@ public class ConversionResult {
     }
 
     /**
+     * Gets input number
+     * 
      * @return the inputNumber
      */
     public String getInputNumber() {
@@ -44,6 +58,8 @@ public class ConversionResult {
     }
 
     /**
+     * Gets output converted number
+     * 
      * @return the outputNumber
      */
     public String getOutputNumber() {
