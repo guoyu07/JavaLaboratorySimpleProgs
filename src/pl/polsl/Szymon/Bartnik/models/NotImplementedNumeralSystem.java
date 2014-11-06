@@ -7,7 +7,7 @@ package pl.polsl.Szymon.Bartnik.models;
  * @author Szymon Bartnik (grupa 2)
  * @version 1.0
  */
-@AdditionalInfo(exclusion = AdditionalInfo.Exclusion.INACTIVE)
+@AdditionalInfo(exclusion = AdditionalInfo.Exclusion.ACTIVE)
 public class NotImplementedNumeralSystem extends NumeralSystem {
 
     /**
