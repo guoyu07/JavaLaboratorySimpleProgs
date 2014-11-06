@@ -1,5 +1,8 @@
 package pl.polsl.Szymon.Bartnik.controller;
 
+import pl.polsl.Szymon.Bartnik.models.ConversionResult;
+import pl.polsl.Szymon.Bartnik.models.ConversionResultBuilder;
+import pl.polsl.Szymon.Bartnik.models.NegativeNumberException;
 import pl.polsl.Szymon.Bartnik.models.NumeralSystem;
 import pl.polsl.Szymon.Bartnik.models.NumeralSystemFactory;
 
@@ -12,8 +15,8 @@ import pl.polsl.Szymon.Bartnik.models.NumeralSystemFactory;
  */
 public class CalculatorController {
 
-    public NumeralSystem inNumSystem = null;  // stores input numeral system
-    public NumeralSystem outNumSystem = null; // stores output numeral system
+    private NumeralSystem inNumSystem = null;  // stores input numeral system
+    private NumeralSystem outNumSystem = null; // stores output numeral system
     
     /**
      * Constructor taking arguments passed to the main method. Creates an instance
@@ -21,7 +24,6 @@ public class CalculatorController {
      * appropriate view
      * 
      * @param args console arguments passed to the main method
-     * @throws ArrayIndexOutOfBoundsException
      * @throws ArrayIndexOutOfBoundsException when specified too little arguments
      * @throws IllegalArgumentException when there was specified not supported numeral system
      */
@@ -36,11 +38,20 @@ public class CalculatorController {
      * instance of the class.
      * 
      * @param inputNumber
-     * @return converted number coded in output numeral system
+     * @return conversion result class with all required information
+     * @throws NegativeNumberException if passed negative number
      */
-    public String convertNumber(String inputNumber){
+    public ConversionResult convertNumber(String inputNumber) 
+            throws NumberFormatException, NullPointerException, NegativeNumberException{
         
-        return inNumSystem.convertToSpecifiedNumSystem(inputNumber, outNumSystem);
+        String result = inNumSystem.convertToSpecifiedNumSystem(inputNumber, outNumSystem);
+        
+        return new ConversionResultBuilder()
+                .setInNumSys(inNumSystem)
+                .setOutNumSys(outNumSystem)
+                .setInNum(inputNumber)
+                .setOutNum(result)
+                .createConversionResult();
     }
     
     /**

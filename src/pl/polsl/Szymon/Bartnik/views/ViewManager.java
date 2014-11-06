@@ -1,6 +1,9 @@
 package pl.polsl.Szymon.Bartnik.views;
 
+import java.util.LinkedList;
 import pl.polsl.Szymon.Bartnik.controller.CalculatorController;
+import pl.polsl.Szymon.Bartnik.models.ConversionResult;
+import pl.polsl.Szymon.Bartnik.models.NegativeNumberException;
 
 /**
  * View class using to cooperate with the user (user interface class).
@@ -42,23 +45,32 @@ public class ViewManager {
      * @throws NumberFormatException if in any step of conversion occured an error connected
      * with wrong format of converted number.
      * @throws NullPointerException if passed null argument
+     * @throws NegativeNumberException if passed negative number
      */
     public void parseNumbersAndPrintResults(CalculatorController calcController) 
-        throws NumberFormatException, NullPointerException {
+        throws NumberFormatException, NullPointerException, NegativeNumberException {
+        
+        LinkedList<ConversionResult> results = new LinkedList<>();
         
         try {
             // for each number convert to the output numeral system
             for(int i=2; i<args.length; i++) {
-                // invoke convert method and present the result
-                System.out.println(
-                    args[i] + " in " + calcController.inNumSystem + " is " + 
-                    calcController.convertNumber(args[i]) + " in " + calcController.outNumSystem);
+                results.add(calcController.convertNumber(args[i]));
             }
         } 
-        catch(NumberFormatException | NullPointerException ex){
+        catch(NumberFormatException | NullPointerException ex) {
             System.out.println("Error occured and numbers convertion cannot be continued. "
                     + "Error: " + ex.getMessage());
             throw ex;
+        }
+        
+        // print results
+        for(ConversionResult result : results) {
+            System.out.println(
+                    result.getInputNumber() + " in " + 
+                    result.getInputNumeralSystem() + " is " + 
+                    result.getOutputNumber() + " in " +
+                    result.getOutputNumeralSystem());
         }
     }
 }
