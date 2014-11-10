@@ -1,13 +1,11 @@
 package pl.polsl.Szymon.Bartnik.models;
 
-import java.math.BigInteger;
-
 /**
  * Class representing decimal numeral system and implementing methods used for
  * computing decimal system from/to other numeral systems.
  * 
  * @author Szymon Bartnik (grupa 2)
- * @version 1.0
+ * @version 2.0
  */
 public class DecimalNumeralSystem extends NumeralSystem{
 

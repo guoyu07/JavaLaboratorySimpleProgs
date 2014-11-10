@@ -5,7 +5,7 @@ package pl.polsl.Szymon.Bartnik.models;
  * exclusion parameter of AdditionalInfo adnotation.
  * 
  * @author Szymon Bartnik (grupa 2)
- * @version 1.0
+ * @version 2.0
  */
 @AdditionalInfo(exclusion = AdditionalInfo.Exclusion.ACTIVE)
 public class NotImplementedNumeralSystem extends NumeralSystem {

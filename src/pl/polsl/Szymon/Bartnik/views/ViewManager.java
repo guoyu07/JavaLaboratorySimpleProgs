@@ -9,7 +9,7 @@ import pl.polsl.Szymon.Bartnik.models.NegativeNumberException;
  * View class using to cooperate with the user (user interface class).
  * 
  * @author Szymon Bartnik (grupa 2)
- * @version 1.0
+ * @version 2.0
  */
 public class ViewManager {
     

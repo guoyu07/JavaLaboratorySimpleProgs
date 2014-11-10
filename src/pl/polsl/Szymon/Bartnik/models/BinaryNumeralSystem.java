@@ -1,13 +1,11 @@
 package pl.polsl.Szymon.Bartnik.models;
 
-import pl.polsl.Szymon.Bartnik.models.AdditionalInfo.Exclusion;
-
 /**
  * Class representing binary numeral system and implementing methods used for
  * computing binary system from/to other numeral systems.
  * 
  * @author Szymon Bartnik (grupa 2)
- * @version 1.0
+ * @version 2.0
  */
 public class BinaryNumeralSystem extends NumeralSystem {
 

@@ -4,7 +4,7 @@ package pl.polsl.Szymon.Bartnik.models;
  * Used to create instance of ConversionResult
  * 
  * @author Szymon Bartnik (grupa 2)
- * @version 1.0
+ * @version 2.0
  */
 public class ConversionResultBuilder {
     private NumeralSystem inNumSys;

@@ -11,7 +11,7 @@ import pl.polsl.Szymon.Bartnik.models.NumeralSystemFactory;
  * between numeral systems. Object can be used directly from view class.
  * 
  * @author Szymon Bartnik (grupa 2)
- * @version 1.0
+ * @version 2.0
  */
 public class CalculatorController {
 
