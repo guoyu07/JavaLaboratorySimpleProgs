@@ -5,6 +5,15 @@
  */
 package pl.polsl.Szymon.Bartnik.views;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.table.DefaultTableModel;
+import pl.polsl.Szymon.Bartnik.controller.CalculatorController;
+import pl.polsl.Szymon.Bartnik.models.ConversionResult;
+import pl.polsl.Szymon.Bartnik.models.NegativeNumberException;
+import pl.polsl.Szymon.Bartnik.models.NumeralSystem;
+
 /**
  *
  * @author Szymon
@@ -32,16 +41,17 @@ public class MainDialog extends javax.swing.JFrame {
         upperMainPanel = new javax.swing.JPanel();
         panelInputNumeralSystem = new javax.swing.JPanel();
         labelInputNumeralSystem = new javax.swing.JLabel();
-        inputNumeralSystem = new javax.swing.JComboBox();
+        inputNumeralSystemComboBox = new javax.swing.JComboBox();
         panelOutpuNumeralSystem = new javax.swing.JPanel();
         labelOutputNumeralSystem = new javax.swing.JLabel();
-        outputNumeralSystem = new javax.swing.JComboBox();
+        outputNumeralSystemComboBox = new javax.swing.JComboBox();
         panelInputNumberToConvert = new javax.swing.JPanel();
         labelInputNumberToConvert = new javax.swing.JLabel();
         inputNumberToConvert = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
         resultsHistoryTable = new javax.swing.JTable();
         mainToolbar = new javax.swing.JToolBar();
+        ComputeNumber = new javax.swing.JButton();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         exitMenuItem = new javax.swing.JMenuItem();
@@ -62,7 +72,7 @@ public class MainDialog extends javax.swing.JFrame {
 
         labelInputNumeralSystem.setText("Input numeral system:");
 
-        inputNumeralSystem.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        inputNumeralSystemComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         javax.swing.GroupLayout panelInputNumeralSystemLayout = new javax.swing.GroupLayout(panelInputNumeralSystem);
         panelInputNumeralSystem.setLayout(panelInputNumeralSystemLayout);
@@ -72,7 +82,7 @@ public class MainDialog extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(labelInputNumeralSystem)
                 .addGap(18, 18, 18)
-                .addComponent(inputNumeralSystem, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(inputNumeralSystemComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelInputNumeralSystemLayout.setVerticalGroup(
             panelInputNumeralSystemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -80,7 +90,7 @@ public class MainDialog extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(panelInputNumeralSystemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelInputNumeralSystem)
-                    .addComponent(inputNumeralSystem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(inputNumeralSystemComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(39, Short.MAX_VALUE))
         );
 
@@ -90,7 +100,7 @@ public class MainDialog extends javax.swing.JFrame {
 
         labelOutputNumeralSystem.setText("Output numeral system:");
 
-        outputNumeralSystem.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        outputNumeralSystemComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         javax.swing.GroupLayout panelOutpuNumeralSystemLayout = new javax.swing.GroupLayout(panelOutpuNumeralSystem);
         panelOutpuNumeralSystem.setLayout(panelOutpuNumeralSystemLayout);
@@ -100,7 +110,7 @@ public class MainDialog extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(labelOutputNumeralSystem)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(outputNumeralSystem, 0, 131, Short.MAX_VALUE))
+                .addComponent(outputNumeralSystemComboBox, 0, 131, Short.MAX_VALUE))
         );
         panelOutpuNumeralSystemLayout.setVerticalGroup(
             panelOutpuNumeralSystemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -108,7 +118,7 @@ public class MainDialog extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(panelOutpuNumeralSystemLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelOutputNumeralSystem)
-                    .addComponent(outputNumeralSystem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(outputNumeralSystemComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(39, Short.MAX_VALUE))
         );
 
@@ -176,6 +186,7 @@ public class MainDialog extends javax.swing.JFrame {
 
         jScrollPane2.setPreferredSize(new java.awt.Dimension(452, 300));
 
+        resultsHistoryTable.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(51, 51, 255)));
         resultsHistoryTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -193,6 +204,19 @@ public class MainDialog extends javax.swing.JFrame {
 
         mainToolbar.setFloatable(false);
         mainToolbar.setRollover(true);
+
+        ComputeNumber.setBackground(new java.awt.Color(204, 204, 204));
+        ComputeNumber.setText("Compute number");
+        ComputeNumber.setAlignmentY(2.0F);
+        ComputeNumber.setFocusable(false);
+        ComputeNumber.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        ComputeNumber.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        ComputeNumber.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ComputeNumberActionPerformed(evt);
+            }
+        });
+        mainToolbar.add(ComputeNumber);
 
         fileMenu.setMnemonic('f');
         fileMenu.setText("File");
@@ -246,6 +270,22 @@ public class MainDialog extends javax.swing.JFrame {
         System.exit(0);
     }//GEN-LAST:event_exitMenuItemActionPerformed
 
+    private void ComputeNumberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ComputeNumberActionPerformed
+        
+        CalculatorController controller = new CalculatorController(new String[]{
+                (String)inputNumeralSystemComboBox.getSelectedItem(),
+                (String)outputNumeralSystemComboBox.getSelectedItem()});
+        
+        try {
+            ConversionResult result = controller.convertNumber(inputNumberToConvert.getText());
+            
+            ComputationFinished(result);
+            
+        } catch (NumberFormatException | NullPointerException | NegativeNumberException ex) {
+            Logger.getLogger(MainDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_ComputeNumberActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -282,12 +322,13 @@ public class MainDialog extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton ComputeNumber;
     private javax.swing.JMenuItem aboutMenuItem;
     private javax.swing.JMenuItem exitMenuItem;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenu helpMenu;
     private javax.swing.JTextField inputNumberToConvert;
-    private javax.swing.JComboBox inputNumeralSystem;
+    private javax.swing.JComboBox inputNumeralSystemComboBox;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSplitPane jSplitPane2;
     private javax.swing.JLabel labelInputNumberToConvert;
@@ -295,15 +336,38 @@ public class MainDialog extends javax.swing.JFrame {
     private javax.swing.JLabel labelOutputNumeralSystem;
     private javax.swing.JToolBar mainToolbar;
     private javax.swing.JMenuBar menuBar;
-    private javax.swing.JComboBox outputNumeralSystem;
+    private javax.swing.JComboBox outputNumeralSystemComboBox;
     private javax.swing.JPanel panelInputNumberToConvert;
     private javax.swing.JPanel panelInputNumeralSystem;
     private javax.swing.JPanel panelOutpuNumeralSystem;
     private javax.swing.JTable resultsHistoryTable;
     private javax.swing.JPanel upperMainPanel;
     // End of variables declaration//GEN-END:variables
-
+    
+    private DefaultComboBoxModel<String> inputNumeralSystems;
+    private DefaultComboBoxModel<String> outputNumeralSystems;
+    
     private void executeMyInit() {
         
+        String[] numeralSystemsMnemonics = { "bin", "dec" };
+        
+        inputNumeralSystems = new DefaultComboBoxModel<>(numeralSystemsMnemonics);
+        inputNumeralSystemComboBox.setModel(inputNumeralSystems);
+        
+        outputNumeralSystems = new DefaultComboBoxModel<>(numeralSystemsMnemonics);
+        outputNumeralSystemComboBox.setModel(outputNumeralSystems);
+        
+        DefaultTableModel resultsTableModel = new DefaultTableModel();
+        resultsTableModel.addColumn("Input num system");
+        resultsTableModel.addColumn("Input number");
+        resultsTableModel.addColumn("Output num system");
+        resultsTableModel.addColumn("Output number");
+        
+        resultsHistoryTable.setModel(resultsTableModel);
+    }
+
+    private void ComputationFinished(ConversionResult result) {
+        DefaultTableModel model = (DefaultTableModel)resultsHistoryTable.getModel();
+        model.addRow(result.convertToTableRow());
     }
 }

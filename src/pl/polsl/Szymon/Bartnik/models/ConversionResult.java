@@ -1,5 +1,7 @@
 package pl.polsl.Szymon.Bartnik.models;
 
+import java.util.Vector;
+
 /**
  * Class storing result of internumeral system conversion.
  * 
@@ -64,5 +66,14 @@ public class ConversionResult {
      */
     public String getOutputNumber() {
         return outputNumber;
+    }
+
+    public Object[] convertToTableRow() {
+        return new Object[]{
+            inputNumeralSystem.getSystemName(),
+            inputNumber,
+            outputNumeralSystem.getSystemName(),
+            outputNumber,
+        };
     }
 }

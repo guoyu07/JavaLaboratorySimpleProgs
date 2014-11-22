@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
-<Form version="1.3" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
+<Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
   <NonVisualComponents>
     <Menu class="javax.swing.JMenuBar" name="menuBar">
       <SubComponents>
@@ -164,7 +164,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="labelInputNumeralSystem" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
-                          <Component id="inputNumeralSystem" max="32767" attributes="0"/>
+                          <Component id="inputNumeralSystemComboBox" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -174,7 +174,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="labelInputNumeralSystem" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="inputNumeralSystem" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="inputNumeralSystemComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace pref="39" max="32767" attributes="0"/>
                       </Group>
@@ -187,7 +187,7 @@
                     <Property name="text" type="java.lang.String" value="Input numeral system:"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JComboBox" name="inputNumeralSystem">
+                <Component class="javax.swing.JComboBox" name="inputNumeralSystemComboBox">
                   <Properties>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                       <StringArray count="4">
@@ -221,7 +221,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="labelOutputNumeralSystem" min="-2" max="-2" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Component id="outputNumeralSystem" pref="131" max="32767" attributes="0"/>
+                          <Component id="outputNumeralSystemComboBox" pref="131" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -231,7 +231,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="labelOutputNumeralSystem" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="outputNumeralSystem" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="outputNumeralSystemComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace pref="39" max="32767" attributes="0"/>
                       </Group>
@@ -244,7 +244,7 @@
                     <Property name="text" type="java.lang.String" value="Output numeral system:"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JComboBox" name="outputNumeralSystem">
+                <Component class="javax.swing.JComboBox" name="outputNumeralSystemComboBox">
                   <Properties>
                     <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                       <StringArray count="4">
@@ -255,6 +255,9 @@
                       </StringArray>
                     </Property>
                   </Properties>
+                  <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_SerializeTo" type="java.lang.String" value="MainDialog_outputNumeralSystem"/>
+                  </AuxValues>
                 </Component>
               </SubComponents>
             </Container>
@@ -336,6 +339,13 @@
           <SubComponents>
             <Component class="javax.swing.JTable" name="resultsHistoryTable">
               <Properties>
+                <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                  <Border info="org.netbeans.modules.form.compat2.border.LineBorderInfo">
+                    <LineBorder>
+                      <Color PropertyName="color" blue="ff" green="33" red="33" type="rgb"/>
+                    </LineBorder>
+                  </Border>
+                </Property>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                   <Table columnCount="4" rowCount="4">
                     <Column editable="true" title="Title 1" type="java.lang.Object"/>
@@ -357,6 +367,23 @@
       </Properties>
 
       <Layout class="org.netbeans.modules.form.compat2.layouts.DesignBoxLayout"/>
+      <SubComponents>
+        <Component class="javax.swing.JButton" name="ComputeNumber">
+          <Properties>
+            <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+              <Color blue="cc" green="cc" red="cc" type="rgb"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="Compute number"/>
+            <Property name="alignmentY" type="float" value="2.0"/>
+            <Property name="focusable" type="boolean" value="false"/>
+            <Property name="horizontalTextPosition" type="int" value="0"/>
+            <Property name="verticalTextPosition" type="int" value="3"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ComputeNumberActionPerformed"/>
+          </Events>
+        </Component>
+      </SubComponents>
     </Container>
   </SubComponents>
 </Form>
