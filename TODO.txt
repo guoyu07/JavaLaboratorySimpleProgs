@@ -1,0 +1,5 @@
+JOptionPane - potwierdzenie wyjścia z programu
+menu - opcja exit
+JTable - efekty konwersji (przed / po)
+pasek narzędziowy - guzik "konwertuj i wynik dodaj do tabelki"
+JSPlitPane - górny panel z tabelką i dolny ze szczegółami konwersji
