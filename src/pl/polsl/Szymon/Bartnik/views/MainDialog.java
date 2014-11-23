@@ -1,12 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package pl.polsl.Szymon.Bartnik.views;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -15,13 +8,16 @@ import pl.polsl.Szymon.Bartnik.models.ConversionResult;
 import pl.polsl.Szymon.Bartnik.models.NegativeNumberException;
 
 /**
- *
- * @author Szymon
+ * Application is simple calculator of numeral systems which can operate
+ * (for now) on decimal and binary numbers using object-oriented architecture.
+ * 
+ * @author Szymon Bartnik (grupa 2)
+ * @version 1.0
  */
 public class MainDialog extends javax.swing.JFrame {
 
     /**
-     * Creates new form MainDialog
+     * Creates new instance of MainDialogClass
      */
     public MainDialog() {
         initComponents();
@@ -275,23 +271,38 @@ public class MainDialog extends javax.swing.JFrame {
         this.formWindowClosing(null);
     }//GEN-LAST:event_exitMenuItemActionPerformed
 
+    /**
+     * Invoked when user clicked computation button. 
+     * 
+     * @param evt describes context of action which invoked the method
+     */
     private void ComputeNumberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ComputeNumberActionPerformed
         
+        // Initializes a new instance of CalculatorController using selected
+        // input and output numeral systems.
         CalculatorController controller = new CalculatorController(new String[]{
                 (String)inputNumeralSystemComboBox.getSelectedItem(),
                 (String)outputNumeralSystemComboBox.getSelectedItem()});
         
         try {
             ConversionResult result = controller.convertNumber(inputNumberToConvert.getText());
-            
             ComputationFinished(result);
             
         } catch (NumberFormatException | NullPointerException | NegativeNumberException ex) {
-            Logger.getLogger(MainDialog.class.getName()).log(Level.SEVERE, null, ex);
+            // Show alert if any error occured during the computation
+            JOptionPane.showMessageDialog(null, ex.getMessage());
         }
     }//GEN-LAST:event_ComputeNumberActionPerformed
 
+    /**
+     * Executes when requested closing the form. Shows the prompt ensuring
+     * the user really wants to exit the program.
+     * 
+     * @param evt describes the context of action which invoked the method.
+     */
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        
+        // shows the prompt and stores result
         int exitResponse = JOptionPane.showConfirmDialog(
                 null, 
                 "Do you want to exit?", 
@@ -299,13 +310,14 @@ public class MainDialog extends javax.swing.JFrame {
                 JOptionPane.YES_NO_OPTION,
                 JOptionPane.QUESTION_MESSAGE);
         
+        // perform form exit when user selected this option
         if(exitResponse == JOptionPane.YES_OPTION) {
             System.exit(0);
         }
     }//GEN-LAST:event_formWindowClosing
 
     /**
-     * @param args the command line arguments
+     * Main method of the application.
      */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -333,6 +345,7 @@ public class MainDialog extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new MainDialog().setVisible(true);
             }
@@ -362,30 +375,65 @@ public class MainDialog extends javax.swing.JFrame {
     private javax.swing.JPanel upperMainPanel;
     // End of variables declaration//GEN-END:variables
     
+    
     private DefaultComboBoxModel<String> inputNumeralSystems;
     private DefaultComboBoxModel<String> outputNumeralSystems;
     
+    /**
+     * Additional initialization of controls of the form.
+     */
     private void executeMyInit() {
         
+        InitializeNumeralSystemComboboxes();
+        InitializeResultsHistoryTable();
+    }
+
+    /**
+     * Executes after successful computation of output number.
+     * Adds the computation result to the results history table.
+     * 
+     * @param result represents computation result storing all required 
+     * information about input/output numeral systems and their values.
+     */
+    private void ComputationFinished(ConversionResult result) {
+        
+        DefaultTableModel model = (DefaultTableModel)resultsHistoryTable.getModel();
+        
+        // adds the result to the table (first converts).
+        model.addRow(result.convertToTableRow());
+    }
+
+    /**
+     * Initializes comboboxes controls responsible for storing 
+     * selected input and output numeral systems.
+     */
+    private void InitializeNumeralSystemComboboxes() {
+        
+        // numeral systems which will be available in GUI
         String[] numeralSystemsMnemonics = { "bin", "dec" };
         
+        // initialization of model of input numeral system combobox
         inputNumeralSystems = new DefaultComboBoxModel<>(numeralSystemsMnemonics);
         inputNumeralSystemComboBox.setModel(inputNumeralSystems);
         
+        // initialization of model of output numeral system combobox
         outputNumeralSystems = new DefaultComboBoxModel<>(numeralSystemsMnemonics);
         outputNumeralSystemComboBox.setModel(outputNumeralSystems);
+    }
+
+    /**
+     * Initializes computation results history table control
+     */
+    private void InitializeResultsHistoryTable() {
         
         DefaultTableModel resultsTableModel = new DefaultTableModel();
+        
+        // adding columns required for the table to the model
         resultsTableModel.addColumn("Input num system");
         resultsTableModel.addColumn("Input number");
         resultsTableModel.addColumn("Output num system");
         resultsTableModel.addColumn("Output number");
         
         resultsHistoryTable.setModel(resultsTableModel);
-    }
-
-    private void ComputationFinished(ConversionResult result) {
-        DefaultTableModel model = (DefaultTableModel)resultsHistoryTable.getModel();
-        model.addRow(result.convertToTableRow());
     }
 }
