@@ -8,11 +8,11 @@ package pl.polsl.Szymon.Bartnik.views;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import pl.polsl.Szymon.Bartnik.controller.CalculatorController;
 import pl.polsl.Szymon.Bartnik.models.ConversionResult;
 import pl.polsl.Szymon.Bartnik.models.NegativeNumberException;
-import pl.polsl.Szymon.Bartnik.models.NumeralSystem;
 
 /**
  *
@@ -58,7 +58,12 @@ public class MainDialog extends javax.swing.JFrame {
         helpMenu = new javax.swing.JMenu();
         aboutMenuItem = new javax.swing.JMenuItem();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
@@ -267,7 +272,7 @@ public class MainDialog extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitMenuItemActionPerformed
-        System.exit(0);
+        this.formWindowClosing(null);
     }//GEN-LAST:event_exitMenuItemActionPerformed
 
     private void ComputeNumberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ComputeNumberActionPerformed
@@ -285,6 +290,19 @@ public class MainDialog extends javax.swing.JFrame {
             Logger.getLogger(MainDialog.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_ComputeNumberActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        int exitResponse = JOptionPane.showConfirmDialog(
+                null, 
+                "Do you want to exit?", 
+                "Confirm exit",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE);
+        
+        if(exitResponse == JOptionPane.YES_OPTION) {
+            System.exit(0);
+        }
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments
