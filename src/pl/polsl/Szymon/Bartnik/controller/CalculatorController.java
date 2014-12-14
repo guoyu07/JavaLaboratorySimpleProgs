@@ -14,9 +14,11 @@ import pl.polsl.Szymon.Bartnik.models.NumeralSystemFactory;
  * @version 2.0
  */
 public class CalculatorController {
-
-    private NumeralSystem inNumSystem = null;  // stores input numeral system
-    private NumeralSystem outNumSystem = null; // stores output numeral system
+    
+    /** stores input numeral system */
+    private NumeralSystem inNumSystem = null;
+    /** stores output numeral system */
+    private NumeralSystem outNumSystem = null; 
     
     /**
      * Constructor taking arguments passed to the main method. Creates an instance
