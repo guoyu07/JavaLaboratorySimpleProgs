@@ -5,7 +5,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
-import pl.polsl.Szymon.Bartnik.exceptions.ServerAnswerException;
+import pl.polsl.Szymon.Bartnik.models.exceptions.ServerAnswerException;
 
 /**
  * Class which encapsulates socket connection to the NumeralSystemsService 

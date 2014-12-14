@@ -1,38 +1,27 @@
 package pl.polsl.Szymon.Bartnik.views;
 
-import java.io.IOException;
-import java.net.Socket;
-import java.util.concurrent.ExecutionException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
-import javax.swing.SwingWorker;
 import javax.swing.table.DefaultTableModel;
-import pl.polsl.Szymon.Bartnik.models.exceptions.ServerAnswerException;
-import pl.polsl.Szymon.Bartnik.models.NumeralSystemsCalculatorClient;
+import pl.polsl.Szymon.Bartnik.controller.CalculatorController;
+import pl.polsl.Szymon.Bartnik.models.ConversionResult;
+import pl.polsl.Szymon.Bartnik.models.exceptions.NegativeNumberException;
 
 /**
  * Application is simple calculator of numeral systems which can operate
  * (for now) on decimal and binary numbers using object-oriented architecture.
  * 
  * @author Szymon Bartnik (grupa 2)
- * @version 1.1
+ * @version 1.0
  */
-public class MainDialog extends javax.swing.JFrame {
+public class GuiClientEntryPoint extends javax.swing.JFrame {
 
-    /** Stores instance of NumeralSystemsCalculator service */
-    NumeralSystemsCalculatorClient service;
-    
     /**
      * Creates new instance of MainDialogClass
      */
-    public MainDialog() {
+    public GuiClientEntryPoint() {
         initComponents();
         executeMyInit();
-        
-        // Run connecting to server asynchronously
-        new ConnectToServerWorker().execute();
     }
 
     /**
@@ -218,13 +207,12 @@ public class MainDialog extends javax.swing.JFrame {
         ComputeNumber.setBackground(new java.awt.Color(204, 204, 204));
         ComputeNumber.setText("Compute number");
         ComputeNumber.setAlignmentY(2.0F);
-        ComputeNumber.setEnabled(false);
         ComputeNumber.setFocusable(false);
         ComputeNumber.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         ComputeNumber.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         ComputeNumber.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                computeNumberActionPerformed(evt);
+                ComputeNumberActionPerformed(evt);
             }
         });
         mainToolbar.add(ComputeNumber);
@@ -268,11 +256,6 @@ public class MainDialog extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     *  Invoked when user clicks x button of the window
-     * 
-     * @param evt describes context of action which invoked the method
-     */
     private void exitMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitMenuItemActionPerformed
         this.formWindowClosing(null);
     }//GEN-LAST:event_exitMenuItemActionPerformed
@@ -282,104 +265,24 @@ public class MainDialog extends javax.swing.JFrame {
      * 
      * @param evt describes context of action which invoked the method
      */
-    private void computeNumberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_computeNumberActionPerformed
+    private void ComputeNumberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ComputeNumberActionPerformed
         
+        // Initializes a new instance of CalculatorController using selected
+        // input and output numeral systems.
+        CalculatorController controller = new CalculatorController(new String[]{
+                (String)inputNumeralSystemComboBox.getSelectedItem(),
+                (String)outputNumeralSystemComboBox.getSelectedItem()});
         
-        if(inputNumberToConvert.getText().isEmpty()){           
-            JOptionPane.showMessageDialog(null, "You have to type number to convert");
-            return;
-        }
-        // Run computing the number asynchronously
-        new ComputeNumberWorker().execute();
-    }//GEN-LAST:event_computeNumberActionPerformed
-
-    /**
-     * Worker which computes the number in the backgroun
-     */
-    private class ComputeNumberWorker extends SwingWorker<Object[], Void> {
-        
-        /**
-         * Computes number on the server in the background.
-         * @return hello message if the connection was successfull
-         */
-        @Override
-        public Object[] doInBackground() {
-            try {
-                
-                // Computes and stores the computation result if was successfull
-                Object[] result = service.convertNumber(
-                        (String)inputNumeralSystemComboBox.getSelectedItem(),
-                        (String)outputNumeralSystemComboBox.getSelectedItem(),
-                        inputNumberToConvert.getText());
-
-                return result;
+        try {
+            ConversionResult result = controller.convertNumber(inputNumberToConvert.getText());
+            ComputationFinished(result);
             
-            } catch (IOException | ServerAnswerException e) {
-                // Show alert if any error occured during the computation
-                JOptionPane.showMessageDialog(null, e.getMessage());
-                return null;
-            }
+        } catch (NumberFormatException | NullPointerException | NegativeNumberException ex) {
+            // Show alert if any error occured during the computation
+            JOptionPane.showMessageDialog(null, ex.getMessage());
         }
+    }//GEN-LAST:event_ComputeNumberActionPerformed
 
-        /**
-         * Executes when the background function is done.
-         */
-        @Override
-        protected void done() {
-            
-            try {
-                Object[] computationResult = get();
-            
-                if(computationResult == null)
-                    return;
-                
-                computationFinished(computationResult);
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, e.getMessage());
-            }
-        }
-    }
-    
-    /**
-     * Worker which connects to the server in the background
-     */
-    private class ConnectToServerWorker extends SwingWorker<String, Void> {
-        
-        /**
-         * Connects to the server in the background.
-         * @return hello message if the connection was successfull
-         */
-        @Override
-        public String doInBackground() {
-            try {
-                Socket socket = new Socket("localhost", 8298);
-                System.out.println("Successfully connected to: " + socket.getInetAddress());
-                
-                // Creating the instance of numeral systems calculator client
-                service = new NumeralSystemsCalculatorClient(socket);
-                
-                return service.getHelloMessage();
-                
-            } catch(IOException e) {
-                JOptionPane.showMessageDialog(null, "Error while trying to connect to the server: " + e.getMessage());
-                return null;
-            }
-        }
-
-        /**
-         * Executes when the background function is done.
-         */
-        @Override
-        protected void done() {
-            try {
-                if(get() != null){
-                    ComputeNumber.setEnabled(true);
-                    JOptionPane.showMessageDialog(null, get());
-                }
-            } catch (Exception ex) { }
-        }
-    }
-    
     /**
      * Executes when requested closing the form. Shows the prompt ensuring
      * the user really wants to exit the program.
@@ -404,10 +307,8 @@ public class MainDialog extends javax.swing.JFrame {
 
     /**
      * Main method of the application.
-     * @param args
      */
     public static void main(String args[]) {
-        
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -421,13 +322,13 @@ public class MainDialog extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MainDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GuiClientEntryPoint.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MainDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GuiClientEntryPoint.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MainDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GuiClientEntryPoint.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MainDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GuiClientEntryPoint.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
         //</editor-fold>
@@ -436,8 +337,7 @@ public class MainDialog extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                
-                new MainDialog().setVisible(true);
+                new GuiClientEntryPoint().setVisible(true);
             }
         });
     }
@@ -472,8 +372,8 @@ public class MainDialog extends javax.swing.JFrame {
      */
     private void executeMyInit() {
         
-        initializeNumeralSystemComboboxes();
-        initializeResultsHistoryTable();
+        InitializeNumeralSystemComboboxes();
+        InitializeResultsHistoryTable();
     }
 
     /**
@@ -483,19 +383,19 @@ public class MainDialog extends javax.swing.JFrame {
      * @param result represents computation result storing all required 
      * information about input/output numeral systems and their values.
      */
-    private void computationFinished(Object[] result) {
+    private void ComputationFinished(ConversionResult result) {
         
         DefaultTableModel model = (DefaultTableModel)resultsHistoryTable.getModel();
         
         // adds the result to the table (first converts).
-        model.addRow(result);
+        model.addRow(result.convertToTableRow());
     }
 
     /**
      * Initializes comboboxes controls responsible for storing 
      * selected input and output numeral systems.
      */
-    private void initializeNumeralSystemComboboxes() {
+    private void InitializeNumeralSystemComboboxes() {
         
         // numeral systems which will be available in GUI
         String[] numeralSystemsMnemonics = { "bin", "dec" };
@@ -512,7 +412,7 @@ public class MainDialog extends javax.swing.JFrame {
     /**
      * Initializes computation results history table control
      */
-    private void initializeResultsHistoryTable() {
+    private void InitializeResultsHistoryTable() {
         
         DefaultTableModel resultsTableModel = new DefaultTableModel();
         
