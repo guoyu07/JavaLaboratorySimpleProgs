@@ -14,12 +14,12 @@ import pl.polsl.Szymon.Bartnik.models.NegativeNumberException;
  * @author Szymon Bartnik (grupa 2)
  * @version 1.0
  */
-public class MainDialog extends javax.swing.JFrame {
+public class GuiClientEntryPoint extends javax.swing.JFrame {
 
     /**
      * Creates new instance of MainDialogClass
      */
-    public MainDialog() {
+    public GuiClientEntryPoint() {
         initComponents();
         executeMyInit();
     }
@@ -322,21 +322,22 @@ public class MainDialog extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(MainDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GuiClientEntryPoint.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(MainDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GuiClientEntryPoint.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(MainDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GuiClientEntryPoint.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(MainDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(GuiClientEntryPoint.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new MainDialog().setVisible(true);
+                new GuiClientEntryPoint().setVisible(true);
             }
         });
     }

@@ -1,7 +1,8 @@
-package pl.polsl.Szymon.Bartnik.models.server;
+package pl.polsl.Szymon.Bartnik.views;
 
 import java.net.*;
 import java.io.*;
+import pl.polsl.Szymon.Bartnik.models.server.NumeralSystemsService;
 
 /** 
  * The main class of the miltithreaded TCP server

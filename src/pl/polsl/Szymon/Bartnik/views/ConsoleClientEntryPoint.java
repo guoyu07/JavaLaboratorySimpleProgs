@@ -9,7 +9,7 @@ import pl.polsl.Szymon.Bartnik.controller.CalculatorController;
  * @author Szymon Bartnik (grupa 2)
  * @version 1.0
  */
-public class EntryPoint {
+public class ConsoleClientEntryPoint {
     /**
      * Main method of application.
      * 
