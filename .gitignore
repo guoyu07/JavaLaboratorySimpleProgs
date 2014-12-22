@@ -15,3 +15,4 @@ nb-configuration.xml
 *.war
 *.ear
 /NumeralSystemsCalculatorClient/nbproject/private/
+/NumeralSystemsCalculatorWeb/nbproject/private/
