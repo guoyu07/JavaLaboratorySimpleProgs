@@ -26,16 +26,20 @@
 
     <body>
         <%
+            // If user is logged in, redirect to the restricted area.
             if (session.getAttribute("user") != null) {
                 response.sendRedirect("restricted.jsp");
             }
 
             String errorNotification = "";
 
+            // If error parameter is set (incorrect password occured), set notification message
             if (request.getParameter("error") != null) {
                 errorNotification = "Wrong username or password!";
             }
             
+            // If redirect parameter is set (tried to get to the restricted area being not logged),
+            // set notification message
             if (request.getParameter("redirect") != null) {
                 errorNotification = "Login first!";
             }
@@ -66,15 +70,15 @@
             <div class="row">
                 <div class="col-sm-6 col-md-4 col-md-offset-4">
                     <div class="account-wall">
-                        <p class="text-center" style="color: red; margin-top: 10px"><%= errorNotification %></p>
                         <h1 class="text-center login-title">Sign in to continue</h1>
                         <form class="form-signin" action="LoginServlet" method="post">
-                            <input type="text" name="userName" class="form-control" placeholder="Nickname" required autofocus>
+                            <input type="text" name="userName" class="form-control" placeholder="Username" required autofocus>
                             <input type="password" name="password" class="form-control" placeholder="Password" required>
                             <button class="btn btn-lg btn-primary btn-block" type="submit">
                                 Sign in
                             </button>
                         </form>
+                        <p class="text-center" style="color: red; margin-top: 10px"><%= errorNotification %></p>
                     </div>
                 </div>
             </div>

@@ -26,12 +26,14 @@
 
     <body>
         <%
+            // If user is not logged, redirect to the logging page
             if (session.getAttribute("user") == null) {
                 response.sendRedirect("index.jsp?redirect=1");
             }
 
             String userName = "";
 
+            // Get and set variable responsible for storing nick of logged in user
             Cookie[] cookies = request.getCookies();
             if (cookies != null) {
                 for (Cookie cookie : cookies) {
@@ -118,37 +120,48 @@
         <!-- Placed at the end of the document so the pages load faster -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
         <script src="/NumeralSystemsCalculatorWeb/resources/js/bootstrap.min.js"></script>
-        
+
         <script type="text/javascript">
-            $(function(){
-               $(".dropdown-menu li a").click(function(){
+            $(function () {
+                
+                // Handle selecting items on both dropwown menus.
+                $(".dropdown-menu li a").click(function () {
                     $(this).parents(".input-group-btn").find('.btn').text($(this).text());
                     $(this).parents(".input-group-btn").find('.btn').val($(this).text());
-                    computeNumber();
-               });
-               
-               $("#inputNumberText").on("input", function(){
-                   computeNumber();
-               });
+                    computeNumber(); // Try to invoke computing every time dropdown changes
+                });
+
+                $("#inputNumberText").on("input", function () {
+                    computeNumber(); // Try to invoke computing every time input number changes
+                });
             });
-            
-            function computeNumber(){
-                
+
+            function computeNumber() {
+
                 var postData = {
-                    from:   $("#inputNumeralSystem").val(),
-                    to:     $("#outputNumeralSystem").val(),
+                    from: $("#inputNumeralSystem").val(),
+                    to: $("#outputNumeralSystem").val(),
                     number: $("#inputNumberText").val()
                 }
-                
-                if(postData.from.trim() && postData.to.trim() && postData.number.trim()){
+
+                // Checking if input data is correct and ready to be sent to the servlet
+                if (postData.from.trim() && postData.to.trim() && postData.number.trim()) {
+                    
+                    // Invoking post method if everything is fine
                     $.post("/NumeralSystemsCalculatorWeb/api?action=computeNumber", postData)
-                        .done(function(data){
-                            $("#outputNumberText").val(data);
-                            $("#errorMessage").empty();
-                        }).fail(function(xhr, status, error){
-                            $("#errorMessage").html(error);
-                            $("#outputNumberText").val("");
-                        });
+                    .done(function (data) {
+                        // Invoked when request was correct and computation succeeded
+                        $("#outputNumberText").val(data);
+                        $("#errorMessage").empty();
+                    })
+                    .fail(function (xhr, status, error) {
+                        // Invoked when any error occured
+                        $("#errorMessage").html(error);
+                        $("#outputNumberText").val("");
+                    });
+                } else {
+                    // Clearing output number textBox if input data is incorrect
+                    $("#outputNumberText").val(""); 
                 }
             }
         </script>

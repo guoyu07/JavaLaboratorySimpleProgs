@@ -12,8 +12,11 @@ import pl.polsl.Szymon.Bartnik.models.ConversionResult;
 import pl.polsl.Szymon.Bartnik.models.exceptions.NegativeNumberException;
 
 /**
- *
- * @author Szymon
+ * Api servlet which is accessible from /api link and correct request
+ * to this endpoint returns computed number. 
+ * 
+ * @author Szymon Bartnik (grupa 2)
+ * @version 1.0
  */
 @WebServlet("/api")
 public class ApiServlet extends HttpServlet {    
@@ -23,40 +26,32 @@ public class ApiServlet extends HttpServlet {
      * 
      * @param req Request
      * @param resp Respond to a question
-     * @exception ServletException
-     * @exception IOException
+     * @exception ServletException if any servlet exception occured
+     * @exception IOException if any IOException occured
      */
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         
         resp.setContentType("application/json");
+        
+        // Get action parameter identifying which action we are about to handle.
         String action = req.getParameter("action");
         
+        // If user invoking request is not logged, redirect to the logging in page.
         if(!checkCredentials(req, resp)){
             resp.sendRedirect("index.html");
             return;
         }
 
+        // If action parameter was not specified, inform about the problem.
         if(action == null){
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "You should specify an action context!");
             return;
         }
         
-        switch(action){
-            case "computeNumber":
-                {
-                    try {
-                        computeNumber(req, resp);
-                    } catch (NumberFormatException | NullPointerException | NegativeNumberException ex) {
-                        resp.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
-                    }
-                }
-                break;
-                
-            default:
-                resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Unknown action!");
-        }
+        // Recognises which action we are about to perform and do it
+        recognizeAndPerformAction(req, resp, action);
     }
     
     /**
@@ -64,8 +59,8 @@ public class ApiServlet extends HttpServlet {
      * 
      * @param req Request
      * @param resp Respond to a question
-     * @exception ServletException
-     * @exception IOException
+     * @exception ServletException if any servlet exception occured
+     * @exception IOException if any IOException occured
      */
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse resp)
@@ -73,6 +68,17 @@ public class ApiServlet extends HttpServlet {
         doGet(req, resp);
     }
 
+    /**
+     * Computes the number in other numeral system and sends JSON result.
+     * 
+     * @param req Request
+     * @param resp Respond to a question
+     * @throws IOException if any IOException occured
+     * @throws NumberFormatException if in any step of conversion occured an error connected
+     * with wrong format of converted number.
+     * @throws NullPointerException if passed null argument
+     * @throws NegativeNumberException if passed negative number
+     */
     private void computeNumber(HttpServletRequest req, HttpServletResponse resp)
             throws IOException, NumberFormatException, NullPointerException, NegativeNumberException {
         
@@ -97,8 +103,46 @@ public class ApiServlet extends HttpServlet {
         out.write(result.getOutputNumber());
     }
 
+    /**
+     * Checks if user performing the action on the servlet is authorized.
+     * 
+     * @param req Request
+     * @param resp Respond to a question
+     * @return if credentials was fulfilled
+     */
     private boolean checkCredentials(HttpServletRequest req, HttpServletResponse resp) {
         
         return req.getSession().getAttribute("user") != null;
+    }
+
+    /**
+     * Recognizes action to perform in this API servlet and performs the action.
+     * 
+     * @param req Request
+     * @param resp Respond to a question
+     * @param action Action to recognize and perform
+     * @throws IOException if any IOException occured
+     */
+    private void recognizeAndPerformAction(HttpServletRequest req, HttpServletResponse resp, String action) 
+            throws IOException {
+        
+        switch(action){
+            // If we were about to invoke 'computeNumber' action
+            case "computeNumber":
+                {
+                    try {
+                        // Try to compute number
+                        computeNumber(req, resp);
+                    } catch (NumberFormatException | NullPointerException | NegativeNumberException ex) {
+                        // Inform about caller about error if any occured
+                        resp.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
+                    }
+                }
+                break;
+                
+            default:
+                // If action parameter was not recognized.
+                resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Unknown action!");
+        }
     }
 }
