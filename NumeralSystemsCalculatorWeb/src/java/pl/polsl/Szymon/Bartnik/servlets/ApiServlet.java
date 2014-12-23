@@ -1,12 +1,9 @@
 package pl.polsl.Szymon.Bartnik.servlets;
 
-import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.LinkedList;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,10 +16,7 @@ import pl.polsl.Szymon.Bartnik.models.exceptions.NegativeNumberException;
  * @author Szymon
  */
 @WebServlet("/api")
-public class ApiServlet extends HttpServlet {
-    
-    LinkedList<Object[]> results = new LinkedList<>();
-    
+public class ApiServlet extends HttpServlet {    
     
     /**
      * Handling reports with GET method
@@ -39,8 +33,7 @@ public class ApiServlet extends HttpServlet {
         resp.setContentType("application/json");
         String action = req.getParameter("action");
         
-        String loggedUser = checkCredentialsAndGetNickName(req, resp);
-        if(loggedUser == null){
+        if(!checkCredentials(req, resp)){
             resp.sendRedirect("index.html");
             return;
         }
@@ -51,14 +44,10 @@ public class ApiServlet extends HttpServlet {
         }
         
         switch(action){
-            case "getResults":
-                getResults(resp);
-                break;
-            
             case "computeNumber":
                 {
                     try {
-                        computeNumber(req, resp, loggedUser);
+                        computeNumber(req, resp);
                     } catch (NumberFormatException | NullPointerException | NegativeNumberException ex) {
                         resp.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
                     }
@@ -84,16 +73,7 @@ public class ApiServlet extends HttpServlet {
         doGet(req, resp);
     }
 
-    private void getResults(HttpServletResponse resp) 
-            throws IOException {
-        
-        String jsonResults = new Gson().toJson(results);
-        
-        PrintWriter out = resp.getWriter();
-        out.write(jsonResults);
-    }
-
-    private void computeNumber(HttpServletRequest req, HttpServletResponse resp, String loggedUser)
+    private void computeNumber(HttpServletRequest req, HttpServletResponse resp)
             throws IOException, NumberFormatException, NullPointerException, NegativeNumberException {
         
         String fromNumeralSystem = req.getParameter("from");
@@ -112,16 +92,13 @@ public class ApiServlet extends HttpServlet {
         
         CalculatorController controller = new CalculatorController(invokeParamters);
         ConversionResult result = controller.convertNumber(numberToConvert);
-        
-        results.add(result.convertToWebRow(loggedUser));
-        
-        String jsonResult = new Gson().toJson(result.convertToTableRow());
-        
+
         PrintWriter out = resp.getWriter();
-        out.write(jsonResult);
+        out.write(result.getOutputNumber());
     }
 
-    private String checkCredentialsAndGetNickName(HttpServletRequest req, HttpServletResponse resp) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private boolean checkCredentials(HttpServletRequest req, HttpServletResponse resp) {
+        
+        return req.getSession().getAttribute("user") != null;
     }
 }

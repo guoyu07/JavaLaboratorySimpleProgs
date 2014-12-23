@@ -46,7 +46,12 @@ public class DecimalNumeralSystem extends NumeralSystem{
             throw new NullPointerException("Number to convert cannot be null object");
         }
         
-        Long numberToConvertAsDecimal = Long.parseLong(numberToConvert);
+        Long numberToConvertAsDecimal;
+        try{
+            numberToConvertAsDecimal = Long.parseLong(numberToConvert);
+        } catch (NumberFormatException ex){
+            throw new NumberFormatException("Number to convert is in incorrect format or is too long to be handled!");
+        }
         
         if(numberToConvertAsDecimal < 0){
             throw new NegativeNumberException();

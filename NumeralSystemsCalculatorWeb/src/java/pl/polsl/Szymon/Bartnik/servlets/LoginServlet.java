@@ -20,12 +20,12 @@ import pl.polsl.Szymon.Bartnik.models.User;
 @WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
     
-    private LinkedList<User> users = new LinkedList<>();
+    private final LinkedList<User> users = new LinkedList<>();
     
     public LoginServlet(){
         
-        users.add(new User("Szymon", "pass1"));
-        users.add(new User("Łukasz", "pass2"));
+        users.add(new User("Simon", "pass1"));
+        users.add(new User("Lucas", "pass2"));
     }
     
     /**
@@ -39,6 +39,8 @@ public class LoginServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+        
+        req.setCharacterEncoding("UTF-8");
         
         String userName = req.getParameter("userName");
         String password = req.getParameter("password");

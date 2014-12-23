@@ -1,3 +1,4 @@
+<%@page language="Java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -34,6 +35,10 @@
             if (request.getParameter("error") != null) {
                 errorNotification = "Wrong username or password!";
             }
+            
+            if (request.getParameter("redirect") != null) {
+                errorNotification = "Login first!";
+            }
         %>
         <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
             <div class="container">
@@ -46,7 +51,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="#">Numeral Systems Calculator</a>
+                    <div class="navbar-brand">Numeral Systems Calculator</div>
                 </div>
                 <div id="navbar" class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
@@ -61,7 +66,7 @@
             <div class="row">
                 <div class="col-sm-6 col-md-4 col-md-offset-4">
                     <div class="account-wall">
-                        <p class="text-center"><%= errorNotification %></p>
+                        <p class="text-center" style="color: red; margin-top: 10px"><%= errorNotification %></p>
                         <h1 class="text-center login-title">Sign in to continue</h1>
                         <form class="form-signin" action="LoginServlet" method="post">
                             <input type="text" name="userName" class="form-control" placeholder="Nickname" required autofocus>
