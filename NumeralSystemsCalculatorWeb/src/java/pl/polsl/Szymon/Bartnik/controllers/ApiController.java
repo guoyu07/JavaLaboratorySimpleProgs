@@ -1,4 +1,4 @@
-package pl.polsl.Szymon.Bartnik.models;
+package pl.polsl.Szymon.Bartnik.controllers;
 
 import com.google.gson.Gson;
 import java.io.IOException;
@@ -10,13 +10,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import pl.polsl.Szymon.Bartnik.controller.CalculatorController;
+import pl.polsl.Szymon.Bartnik.models.ConversionResult;
 import pl.polsl.Szymon.Bartnik.models.exceptions.NegativeNumberException;
 
 /**
  *
  * @author Szymon
  */
-public class Index extends HttpServlet {
+public class ApiController extends HttpServlet {
     
     LinkedList<Object[]> results = new LinkedList<>();
     
