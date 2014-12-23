@@ -1,10 +1,11 @@
-package pl.polsl.Szymon.Bartnik.controllers;
+package pl.polsl.Szymon.Bartnik.servlets;
 
 import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.LinkedList;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,7 +18,8 @@ import pl.polsl.Szymon.Bartnik.models.exceptions.NegativeNumberException;
  *
  * @author Szymon
  */
-public class ApiController extends HttpServlet {
+@WebServlet("/api")
+public class ApiServlet extends HttpServlet {
     
     LinkedList<Object[]> results = new LinkedList<>();
     
@@ -37,6 +39,12 @@ public class ApiController extends HttpServlet {
         resp.setContentType("application/json");
         String action = req.getParameter("action");
         
+        String loggedUser = checkCredentialsAndGetNickName(req, resp);
+        if(loggedUser == null){
+            resp.sendRedirect("index.html");
+            return;
+        }
+
         if(action == null){
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "You should specify an action context!");
             return;
@@ -44,22 +52,19 @@ public class ApiController extends HttpServlet {
         
         switch(action){
             case "getResults":
-                getResults(req, resp);
+                getResults(resp);
                 break;
             
             case "computeNumber":
                 {
                     try {
-                        computeNumber(req, resp);
+                        computeNumber(req, resp, loggedUser);
                     } catch (NumberFormatException | NullPointerException | NegativeNumberException ex) {
                         resp.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
                     }
                 }
                 break;
                 
-            case "loginUser":
-                loginUser(req, resp);
-                break;
             default:
                 resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Unknown action!");
         }
@@ -79,7 +84,7 @@ public class ApiController extends HttpServlet {
         doGet(req, resp);
     }
 
-    private void getResults(HttpServletRequest req, HttpServletResponse resp) 
+    private void getResults(HttpServletResponse resp) 
             throws IOException {
         
         String jsonResults = new Gson().toJson(results);
@@ -88,24 +93,8 @@ public class ApiController extends HttpServlet {
         out.write(jsonResults);
     }
 
-    private void computeNumber(HttpServletRequest req, HttpServletResponse resp)
+    private void computeNumber(HttpServletRequest req, HttpServletResponse resp, String loggedUser)
             throws IOException, NumberFormatException, NullPointerException, NegativeNumberException {
-        
-        Cookie[] cookies = req.getCookies();
-        String loggedUser = null;
-        
-        
-        for(Cookie cookie : cookies){
-            if("loggedUser".equals(cookie.getName())){
-                loggedUser = cookie.getValue();
-                break;
-            }
-        }
-        
-        if(loggedUser == null){
-            resp.sendError(HttpServletResponse.SC_FORBIDDEN, "Unauthorized access. Log in first!");
-            return;
-        }
         
         String fromNumeralSystem = req.getParameter("from");
         String toNumeralSystem   = req.getParameter("to");
@@ -132,20 +121,7 @@ public class ApiController extends HttpServlet {
         out.write(jsonResult);
     }
 
-    private void loginUser(HttpServletRequest req, HttpServletResponse resp) 
-            throws IOException {
-        
-        String userName = req.getParameter("userName");
-        
-        if(userName == null){
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "You should specify userName parameter!");
-            return;
-        }
-        
-        Cookie cookie = new Cookie("loggedUser", userName);
-        resp.addCookie(cookie);
-        
-        PrintWriter out = resp.getWriter();
-        out.write("OK");
+    private String checkCredentialsAndGetNickName(HttpServletRequest req, HttpServletResponse resp) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
