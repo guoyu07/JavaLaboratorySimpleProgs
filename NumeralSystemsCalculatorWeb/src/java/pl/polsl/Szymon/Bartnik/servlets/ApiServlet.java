@@ -82,10 +82,12 @@ public class ApiServlet extends HttpServlet {
     private void computeNumber(HttpServletRequest req, HttpServletResponse resp)
             throws IOException, NumberFormatException, NullPointerException, NegativeNumberException {
         
+        // Gets parameters neccessary to compute new number
         String fromNumeralSystem = req.getParameter("from");
         String toNumeralSystem   = req.getParameter("to");
         String numberToConvert   = req.getParameter("number");
         
+        // Checks if every parameter is specified and sends error code if not.
         if(fromNumeralSystem == null ||
            toNumeralSystem == null ||
            numberToConvert == null){
@@ -94,11 +96,16 @@ public class ApiServlet extends HttpServlet {
             return;
         }
         
+        // Convert parameters to the object array.
         String[] invokeParamters = new String[] { fromNumeralSystem, toNumeralSystem };
         
+        // Create calculator controller using specified invoke parameters.
         CalculatorController controller = new CalculatorController(invokeParamters);
+        
+        // Compute the result 
         ConversionResult result = controller.convertNumber(numberToConvert);
 
+        // Create and send a response.
         PrintWriter out = resp.getWriter();
         out.write(result.getOutputNumber());
     }
