@@ -1,14 +1,22 @@
 package pl.polsl.Szymon.Bartnik.servlets;
 
+import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.LinkedList;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import pl.polsl.Szymon.Bartnik.controller.CalculatorController;
+import pl.polsl.Szymon.Bartnik.helpers.DerbyUtils;
 import pl.polsl.Szymon.Bartnik.models.ConversionResult;
+import pl.polsl.Szymon.Bartnik.models.Result;
 import pl.polsl.Szymon.Bartnik.models.exceptions.NegativeNumberException;
 
 /**
@@ -20,6 +28,12 @@ import pl.polsl.Szymon.Bartnik.models.exceptions.NegativeNumberException;
  */
 @WebServlet("/api")
 public class ApiServlet extends HttpServlet {    
+    
+    private final Connection connection;
+    
+    public ApiServlet(){
+        connection = DerbyUtils.connectToDatabase();
+    }
     
     /**
      * Handling reports with GET method
@@ -136,20 +150,83 @@ public class ApiServlet extends HttpServlet {
         switch(action){
             // If we were about to invoke 'computeNumber' action
             case "computeNumber":
-                {
-                    try {
-                        // Try to compute number
-                        computeNumber(req, resp);
-                    } catch (NumberFormatException | NullPointerException | NegativeNumberException ex) {
-                        // Inform about caller about error if any occured
-                        resp.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
-                    }
+                try {
+                    // Try to compute number
+                    computeNumber(req, resp);
+                } catch (NumberFormatException | NullPointerException | NegativeNumberException ex) {
+                    // Inform about caller about error if any occured
+                    resp.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
+                }
+                break;
+            case "getResults":
+                try{
+                    getResults(req, resp);
+                } catch (Exception ex) {
+                    // Inform about caller about error if any occured
+                    resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage());
+                }
+                break;
+            case "saveResult":
+                try{
+                    saveResult(req, resp);
+                } catch (Exception ex) {
+                    // Inform about caller about error if any occured
+                    resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage());
                 }
                 break;
                 
             default:
                 // If action parameter was not recognized.
                 resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Unknown action!");
+        }
+    }
+
+    private void saveResult(HttpServletRequest req, HttpServletResponse resp) 
+            throws IOException {
+        
+        int userId = (int)req.getSession().getAttribute("userid");
+        String param = req.getParameter("content");
+        Result result = new Gson().fromJson(param, Result.class);
+        
+        try {
+            Statement statement = connection.createStatement();
+            statement.executeUpdate("INSERT INTO Results(userid, fromnumeralsystem, "
+                    + "tonumeralsystem, numbertoconvert, convertednumber) VALUES "
+                    + "(" + userId
+                    + ", '" + result.getFromNumeralSystem()
+                    + "', '" + result.getToNumeralSystem()
+                    + "', '" + result.getNumberToConvert()
+                    + "', '" + result.getConvertedNumber() + "')");
+            
+            PrintWriter out = resp.getWriter();
+            out.write("{}");
+        } catch (SQLException ex) {
+            // Inform about caller about error if any occured
+            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage());
+        }
+    }
+
+    private void getResults(HttpServletRequest req, HttpServletResponse resp) 
+            throws IOException {
+        int userId = (int)req.getSession().getAttribute("userid");
+        
+        LinkedList<Result> results = new LinkedList<>();
+        
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet rs = statement.executeQuery("SELECT * FROM Results WHERE userid = '" + userId +"'");
+            
+            while(rs.next()){
+                results.add(new Result(rs));
+            }
+            
+            // Create and send a response.
+            PrintWriter out = resp.getWriter();
+            out.write(new Gson().toJson(results));
+            
+        } catch (SQLException ex) {
+            // Inform about caller about error if any occured
+            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage());
         }
     }
 }

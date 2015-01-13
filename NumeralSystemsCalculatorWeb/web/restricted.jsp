@@ -26,22 +26,10 @@
 
     <body>
         <%
-            // If user is not logged, redirect to the logging page
-            if (session.getAttribute("user") == null) {
+            String userName = (String)session.getAttribute("user");
+            
+            if(userName == null)
                 response.sendRedirect("index.jsp?redirect=1");
-            }
-
-            String userName = "";
-
-            // Get and set variable responsible for storing nick of logged in user
-            Cookie[] cookies = request.getCookies();
-            if (cookies != null) {
-                for (Cookie cookie : cookies) {
-                    if (cookie.getName().equals("user")) {
-                        userName = cookie.getValue();
-                    }
-                }
-            }
         %>
         <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
             <div class="container">
@@ -110,6 +98,9 @@
                         </div><!-- /btn-group -->
                     </div><!-- /input-group -->
                 </div>
+                <div class="text-center col-md-6 col-md-offset-3" style="margin-top:8px">
+                    <button id="saveResultButton" type="submit" class="btn btn-default">Save result</button>
+                </div>
                 <div class="text-center col-md-6 col-md-offset-3" 
                      style="color: red; margin-top: 10px" id="errorMessage"></div>
             </div>
@@ -123,6 +114,37 @@
 
         <script type="text/javascript">
             $(function () {
+                
+                $("#saveResultButton").click(function() {
+                    
+                    var postData = {
+                        fromNumeralSystem: $("#inputNumeralSystem").val(),
+                        toNumeralSystem: $("#outputNumeralSystem").val(),
+                        numberToConvert: $("#inputNumberText").val(),
+                        convertedNumber: $("#outputNumberText").val()
+                    };
+                    
+                    var postDataSerialized = {
+                        content: JSON.stringify(postData)
+                    };
+                    
+                    // Checking if input data is correct and ready to be sent to the servlet
+                    if (postData.fromNumeralSystem.trim() &&
+                        postData.toNumeralSystem.trim() && 
+                        postData.numberToConvert.trim() &&
+                        postData.convertedNumber.trim()) {
+
+                        // Invoking post method if everything is fine
+                        $.post("/NumeralSystemsCalculatorWeb/api?action=saveResult", postDataSerialized)
+                        .done(function () {
+                            alert("Successfully saved!");
+                        })
+                        .fail(function (xhr, status, error) {
+                            // Invoked when any error occured
+                            $("#errorMessage").html(error);
+                        });
+                    }
+                });
                 
                 // Handle selecting items on both dropwown menus.
                 $(".dropdown-menu li a").click(function () {
