@@ -1,6 +1,7 @@
 package pl.polsl.Szymon.Bartnik.servlets;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -188,9 +189,10 @@ public class ApiServlet extends HttpServlet {
         
         int userId = (int)req.getSession().getAttribute("userid");
         String param = req.getParameter("content");
-        Result result = new Gson().fromJson(param, Result.class);
         
         try {
+            Result result = new Gson().fromJson(param, Result.class);
+            result.validateAfterDeserialization();
             Statement statement = connection.createStatement();
             statement.executeUpdate("INSERT INTO Results(userid, fromnumeralsystem, "
                     + "tonumeralsystem, numbertoconvert, convertednumber) VALUES "
@@ -205,7 +207,9 @@ public class ApiServlet extends HttpServlet {
         } catch (SQLException ex) {
             // Inform about caller about error if any occured
             resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage());
-        }
+        } catch (JsonSyntaxException | IllegalArgumentException | IOException ex){
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, ex.getMessage());
+        } 
     }
 
     private void getResults(HttpServletRequest req, HttpServletResponse resp) 

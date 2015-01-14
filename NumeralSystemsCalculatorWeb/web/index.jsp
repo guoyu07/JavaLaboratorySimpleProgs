@@ -35,14 +35,16 @@
 
             // If error parameter is set (incorrect password occured), set notification message
             if (request.getParameter("error") != null) {
-                switch(Integer.parseInt(request.getParameter("error"))){
-                    case 1:
-                        errorNotification = "User already exists or incorrect userName!";
-                        break;
-                    case 2:
-                        errorNotification = "Wrong username or password!";
-                        break;
-                }
+                try {
+                    switch(Integer.parseInt(request.getParameter("error"))){
+                        case 1:
+                            errorNotification = "User already exists or incorrect userName!";
+                            break;
+                        case 2:
+                            errorNotification = "Wrong username or password!";
+                            break;
+                    }
+                } catch(NumberFormatException ex){}
             }
             
             // If redirect parameter is set (tried to get to the restricted area being not logged),

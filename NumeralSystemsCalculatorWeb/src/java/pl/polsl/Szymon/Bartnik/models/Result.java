@@ -78,4 +78,15 @@ public class Result {
     public int getId() {
         return id;
     }
+
+    public void validateAfterDeserialization() 
+        throws IllegalArgumentException {
+        if(fromNumeralSystem != null && toNumeralSystem != null &&
+                numberToConvert != null && convertedNumber != null){
+            return;
+        }
+        
+        throw new IllegalArgumentException("One of the arguments of request "
+                + "hasn't been specified");
+    }
 }
