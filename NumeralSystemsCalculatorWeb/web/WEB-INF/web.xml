@@ -8,4 +8,29 @@
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
+    
+    <context-param>
+        <param-name>dbDriverName</param-name>
+        <param-value>org.apache.derby.jdbc.ClientDriver</param-value>
+    </context-param>
+    <context-param>
+        <param-name>dbServerName</param-name> 
+        <param-value>localhost</param-value>
+    </context-param>
+    <context-param>
+        <param-name>dbPort</param-name> 
+        <param-value>1527</param-value>
+    </context-param>
+    <context-param>
+        <param-name>dbBaseName</param-name> 
+        <param-value>numeralSystemsBase</param-value>
+    </context-param>
+    <context-param>
+        <param-name>dbUserName</param-name> 
+        <param-value>lab</param-value>
+    </context-param>
+    <context-param>
+        <param-name>dbPassword</param-name> 
+        <param-value>lab</param-value>
+    </context-param>
 </web-app>

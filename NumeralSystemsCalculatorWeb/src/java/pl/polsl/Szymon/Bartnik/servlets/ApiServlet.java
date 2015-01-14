@@ -29,10 +29,12 @@ import pl.polsl.Szymon.Bartnik.models.exceptions.NegativeNumberException;
 @WebServlet("/api")
 public class ApiServlet extends HttpServlet {    
     
-    private final Connection connection;
+    private Connection connection;
     
-    public ApiServlet(){
-        connection = DerbyUtils.connectToDatabase();
+    @Override
+    public void init(){
+        
+        connection = DerbyUtils.connectToDatabase(getServletContext());
     }
     
     /**
@@ -214,7 +216,7 @@ public class ApiServlet extends HttpServlet {
         
         try {
             Statement statement = connection.createStatement();
-            ResultSet rs = statement.executeQuery("SELECT * FROM Results WHERE userid = '" + userId +"'");
+            ResultSet rs = statement.executeQuery("SELECT * FROM Results WHERE userid = " + userId);
             
             while(rs.next()){
                 results.add(new Result(rs));

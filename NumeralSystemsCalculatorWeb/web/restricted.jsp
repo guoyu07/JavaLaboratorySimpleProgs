@@ -9,7 +9,7 @@
         <meta name="author" content="">
         <link rel="icon" href="../../favicon.ico">
 
-        <title>Numeral Systems Calculator</title>
+        <title>Numeral Systems Calculator - Restricted</title>
 
         <!-- Bootstrap core CSS -->
         <link href="/NumeralSystemsCalculatorWeb/resources/css/bootstrap.min.css" rel="stylesheet">
@@ -46,8 +46,9 @@
                 </div>
                 <div id="navbar" class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
-                        <li class="active"><a href="index.jsp">Login</a></li>
+                        <li><a href="index.jsp">Login</a></li>
                         <li class="active"><a href="restricted.jsp">Restricted</a></li>
+                        <li><a href="dbEntries.jsp">DB Entries</a></li>
                     </ul>
 
                     <form class="navbar-form navbar-right" action="LogoutServlet" method="post">
@@ -103,6 +104,20 @@
                 </div>
                 <div class="text-center col-md-6 col-md-offset-3" 
                      style="color: red; margin-top: 10px" id="errorMessage"></div>
+                <div class="col-md-8 col-md-offset-2 container">
+                    <table class="table table-condensed table-striped" id="resultsTable">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Input numeral system</th>
+                                <th>Input number</th>
+                                <th>Output numeral system</th>
+                                <th>Output number</th>
+                            </tr>
+                        </thead>
+                        <tbody />
+                    </table>
+                </div>
             </div>
         </div>
 
@@ -115,6 +130,10 @@
         <script type="text/javascript">
             $(function () {
                 
+                // Get results on load
+                getResults();
+                
+                // Handle saving results
                 $("#saveResultButton").click(function() {
                     
                     var postData = {
@@ -137,7 +156,7 @@
                         // Invoking post method if everything is fine
                         $.post("/NumeralSystemsCalculatorWeb/api?action=saveResult", postDataSerialized)
                         .done(function () {
-                            alert("Successfully saved!");
+                            getResults();
                         })
                         .fail(function (xhr, status, error) {
                             // Invoked when any error occured
@@ -157,6 +176,25 @@
                     computeNumber(); // Try to invoke computing every time input number changes
                 });
             });
+
+            function getResults() {
+                
+                $.get("/NumeralSystemsCalculatorWeb/api?action=getResults", function(data){
+                    var tbl_body = "";
+                    $.each(data, function(i) {
+                        var tbl_row = "";
+                        tbl_row += "<td>"+(i+1)+"</td>";
+                        var index = 0;
+                        $.each(this, function(k , v) {
+                            if(index++ > 1){
+                                tbl_row += "<td>"+v+"</td>";
+                            }
+                        });
+                        tbl_body += "<tr>"+tbl_row+"</tr>";       
+                    });
+                    $("#resultsTable tbody").html(tbl_body);
+                });
+            }
 
             function computeNumber() {
 

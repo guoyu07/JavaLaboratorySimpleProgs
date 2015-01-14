@@ -9,7 +9,7 @@
         <meta name="author" content="">
         <link rel="icon" href="../../favicon.ico">
 
-        <title>Numeral Systems Calculator</title>
+        <title>Numeral Systems Calculator - Login/Register</title>
 
         <!-- Bootstrap core CSS -->
         <link href="/NumeralSystemsCalculatorWeb/resources/css/bootstrap.min.css" rel="stylesheet">
@@ -35,7 +35,14 @@
 
             // If error parameter is set (incorrect password occured), set notification message
             if (request.getParameter("error") != null) {
-                errorNotification = "Wrong username or password!";
+                switch(Integer.parseInt(request.getParameter("error"))){
+                    case 1:
+                        errorNotification = "User already exists or incorrect userName!";
+                        break;
+                    case 2:
+                        errorNotification = "Wrong username or password!";
+                        break;
+                }
             }
             
             // If redirect parameter is set (tried to get to the restricted area being not logged),
@@ -60,7 +67,8 @@
                 <div id="navbar" class="collapse navbar-collapse">
                     <ul class="nav navbar-nav">
                         <li class="active"><a href="index.jsp">Login</a></li>
-                        <li class="active"><a href="restricted.jsp">Restricted</a></li>
+                        <li><a href="restricted.jsp">Restricted</a></li>
+                        <li><a href="dbEntries.jsp">DB Entries</a></li>
                     </ul>
                 </div><!--/.nav-collapse -->
             </div>
@@ -74,8 +82,11 @@
                         <form class="form-signin" action="LoginServlet" method="post">
                             <input type="text" name="userName" class="form-control" placeholder="Username" required autofocus>
                             <input type="password" name="password" class="form-control" placeholder="Password" required>
-                            <button class="btn btn-lg btn-primary btn-block" type="submit">
+                            <button class="btn btn-lg btn-primary btn-block" type="submit" name="bsubmit" value="login">
                                 Sign in
+                            </button>
+                            <button class="btn btn-lg btn-primary btn-block" type="submit" name="bsubmit" value="register">
+                                Register
                             </button>
                         </form>
                         <p class="text-center" style="color: red; margin-top: 10px"><%= errorNotification %></p>

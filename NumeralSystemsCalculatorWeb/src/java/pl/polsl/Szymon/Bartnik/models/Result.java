@@ -9,15 +9,17 @@ import java.sql.SQLException;
  */
 public class Result {
     
+    private int id;
     private int userId;
     private String fromNumeralSystem;
-    private String toNumeralSystem;
     private String numberToConvert;
+    private String toNumeralSystem;
     private String convertedNumber;
 
     public Result(ResultSet rs) 
             throws SQLException {
         
+        id = rs.getInt("id");
         userId = rs.getInt("userid");
         fromNumeralSystem = rs.getString("fromnumeralsystem");
         toNumeralSystem = rs.getString("tonumeralsystem");
@@ -68,5 +70,12 @@ public class Result {
      */
     public String getConvertedNumber() {
         return convertedNumber;
+    }
+
+    /**
+     * @return the id
+     */
+    public int getId() {
+        return id;
     }
 }

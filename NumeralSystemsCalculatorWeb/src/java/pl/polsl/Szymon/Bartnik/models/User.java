@@ -12,7 +12,7 @@ import java.sql.SQLException;
 public class User {
     
     /** User id identifying the user */
-    private final int userId;
+    private final int id;
     /** User name identifying the user */
     private final String userName;
     /** Password credential used for logging in purposes */
@@ -27,7 +27,7 @@ public class User {
      * @param password password of the user
      */
     public User(int userId, String userName, String password){
-        this.userId   = userId;
+        this.id   = userId;
         this.userName = userName;
         this.password = password;
     }
@@ -35,18 +35,18 @@ public class User {
     public User(ResultSet rs) 
             throws SQLException {
         
-        userId = rs.getInt("id");
+        id = rs.getInt("id");
         userName = rs.getString("username");
         password = rs.getString("password");
     }
 
     /**
-     * Gets user id
+     * Gets id
      * 
-     * @return the userId
+     * @return the id
      */
-    public int getUserId() {
-        return userId;
+    public int getId() {
+        return id;
     }
     
     /**
