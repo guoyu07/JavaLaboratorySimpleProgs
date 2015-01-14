@@ -18,7 +18,7 @@ import pl.polsl.Szymon.Bartnik.models.Result;
 import pl.polsl.Szymon.Bartnik.models.User;
 
 /**
- * Login servlet responsible for showing tables in DB
+ * Login servlet responsible for showing tables from DB.
  * 
  * @author Szymon Bartnik (grupa 2)
  * @version 1.0
@@ -26,8 +26,12 @@ import pl.polsl.Szymon.Bartnik.models.User;
 @WebServlet("/DbEntriesServlet")
 public class DbEntriesServlet extends HttpServlet {
     
+    /** Represents DB connection */
     private Connection connection;
     
+    /**
+     * Initialization method invoked when creating instance of the class.
+     */
     @Override
     public void init(){
         
@@ -35,6 +39,14 @@ public class DbEntriesServlet extends HttpServlet {
         DerbyUtils.createTablesIfNecessary(connection);
     }
     
+    /**
+     * Handling reports with GET method
+     * 
+     * @param req Request
+     * @param resp Respond to a question
+     * @exception ServletException if any servlet exception occured
+     * @exception IOException if any IOException occured
+     */
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
@@ -50,35 +62,39 @@ public class DbEntriesServlet extends HttpServlet {
             return;
         }
         
+        // Declare and initialize lists for records.
         LinkedList<Result> resultResults = new LinkedList<>();
         LinkedList<User> userResults = new LinkedList<>();
         
         try {
             Statement statement = connection.createStatement();
-            // Create and send a response.
             PrintWriter out = resp.getWriter();
             
+            // Checks which action to perform.
             switch(action){
                 case "resultsTable":
                     ResultSet rsResults = statement.executeQuery("SELECT * FROM Results");
-            
                     while(rsResults.next()){
                         resultResults.add(new Result(rsResults));
                     }
+                    rsResults.close();
+                    
+                    // Sends a response with serialized results table
                     out.write(new Gson().toJson(resultResults));
                     break;
                 case "usersTable":
                     ResultSet rsUsers = statement.executeQuery("SELECT * FROM Users");
-            
                     while(rsUsers.next()){
                         userResults.add(new User(rsUsers));
                     }
+                    rsUsers.close();
+                    
+                    // Sends a response with serialized users table
                     out.write(new Gson().toJson(userResults));
                     break;
                 default:
                     // If action parameter was not recognized.
                     resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Unknown action!");
-                    return;
             }
         } catch (SQLException ex) {
             // Inform about caller about error if any occured
@@ -86,6 +102,32 @@ public class DbEntriesServlet extends HttpServlet {
         }
     }
     
+    /**
+     * Cleans up the servlet instance and closes DB connection.
+     */
+    @Override
+    public void destroy(){
+        
+        if(connection == null){
+            return;
+        } 
+        
+        try {
+            connection.close();
+        } catch (SQLException ex) {
+            System.err.println("SQL exception: " + ex.getMessage());
+        }
+        super.destroy();
+    }
+    
+    /**
+     * Handling reports with POST method
+     * 
+     * @param req Request
+     * @param resp Respond to a question
+     * @exception ServletException if any servlet exception occured
+     * @exception IOException if any IOException occured
+     */
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {

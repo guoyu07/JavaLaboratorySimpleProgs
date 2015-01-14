@@ -4,18 +4,32 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- *
- * @author Szymon
+ * Model class accumulating numeral systems computation result.
+ * 
+ * @author Szymon Bartnik (grupa 2)
+ * @version 1.0
  */
 public class Result {
     
-    private int id;
+    /** Result id */
+    private final int id;
+    /** ID of owner of the record of result */
     private int userId;
-    private String fromNumeralSystem;
-    private String numberToConvert;
-    private String toNumeralSystem;
-    private String convertedNumber;
+    /** Source numeral system */
+    private final String fromNumeralSystem;
+    /** Number to convert */
+    private final String numberToConvert;
+    /** Destination numeral system */
+    private final String toNumeralSystem;
+    /** Converted number */
+    private final String convertedNumber;
 
+    /**
+     * Initializes current instance of Result class by passed result set.
+     * 
+     * @param rs result set from which reading init values for current instance of Result class.
+     * @throws SQLException when problems during reading from sql result set occured.
+     */
     public Result(ResultSet rs) 
             throws SQLException {
         
@@ -26,11 +40,9 @@ public class Result {
         numberToConvert = rs.getString("numbertoconvert");
         convertedNumber = rs.getString("convertednumber");
     }
-    
-    public Result(){
-    }
 
     /**
+     * Gets the user ID.
      * @return the userId
      */
     public int getUserId() {
@@ -38,6 +50,7 @@ public class Result {
     }
 
     /**
+     * Sets the user ID.
      * @param userId the userId to set
      */
     public void setUserId(int userId) {
@@ -45,6 +58,7 @@ public class Result {
     }
 
     /**
+     * Gets source numeral system.
      * @return the fromNumeralSystem
      */
     public String getFromNumeralSystem() {
@@ -52,6 +66,7 @@ public class Result {
     }
     
     /**
+     * Gets destination numeral system.
      * @return the toNumeralSystem
      */
     public String getToNumeralSystem() {
@@ -59,6 +74,7 @@ public class Result {
     }
 
     /**
+     * Gets number to convert.
      * @return the numberToConvert
      */
     public String getNumberToConvert() {
@@ -66,6 +82,7 @@ public class Result {
     }
     
     /**
+     * Gets converted number.
      * @return the convertedNumber
      */
     public String getConvertedNumber() {
@@ -73,20 +90,28 @@ public class Result {
     }
 
     /**
+     * Gets result db id.
      * @return the id
      */
     public int getId() {
         return id;
     }
 
+    /**
+     * Checks if class is appropriate after JSON deserialization
+     * and throws an exception if not.
+     * 
+     * @throws IllegalArgumentException if validation was not successfull.
+     */
     public void validateAfterDeserialization() 
         throws IllegalArgumentException {
+        
         if(fromNumeralSystem != null && toNumeralSystem != null &&
                 numberToConvert != null && convertedNumber != null){
             return;
         }
         
-        throw new IllegalArgumentException("One of the arguments of request "
-                + "hasn't been specified");
+        throw new IllegalArgumentException(
+                "One of the arguments of request hasn't been specified");
     }
 }

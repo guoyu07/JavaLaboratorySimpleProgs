@@ -30,8 +30,12 @@ import pl.polsl.Szymon.Bartnik.models.exceptions.NegativeNumberException;
 @WebServlet("/api")
 public class ApiServlet extends HttpServlet {    
     
+    /** Represents DB connection */
     private Connection connection;
     
+    /**
+     * Initialization method invoked when creating instance of the class.
+     */
     @Override
     public void init(){
         
@@ -154,7 +158,6 @@ public class ApiServlet extends HttpServlet {
             // If we were about to invoke 'computeNumber' action
             case "computeNumber":
                 try {
-                    // Try to compute number
                     computeNumber(req, resp);
                 } catch (NumberFormatException | NullPointerException | NegativeNumberException ex) {
                     // Inform about caller about error if any occured
@@ -184,16 +187,29 @@ public class ApiServlet extends HttpServlet {
         }
     }
 
+    /**
+     * Saves result passed in JSON by parameter in request.
+     * 
+     * @param req Request
+     * @param resp Respond to a question
+     * @exception IOException if any IOException occured
+     */
     private void saveResult(HttpServletRequest req, HttpServletResponse resp) 
             throws IOException {
         
+        // Gets user ID for which save the computation result.
         int userId = (int)req.getSession().getAttribute("userid");
+        // Get JSON content of the request.
         String param = req.getParameter("content");
         
         try {
+            // Deserialize result to save from JSON string.
             Result result = new Gson().fromJson(param, Result.class);
+            // Validate deserialized result object.
             result.validateAfterDeserialization();
+            
             Statement statement = connection.createStatement();
+            // Execute insert result to Results table.
             statement.executeUpdate("INSERT INTO Results(userid, fromnumeralsystem, "
                     + "tonumeralsystem, numbertoconvert, convertednumber) VALUES "
                     + "(" + userId
@@ -202,6 +218,7 @@ public class ApiServlet extends HttpServlet {
                     + "', '" + result.getNumberToConvert()
                     + "', '" + result.getConvertedNumber() + "')");
             
+            // Send empty response (OK).
             PrintWriter out = resp.getWriter();
             out.write("{}");
         } catch (SQLException ex) {
@@ -212,21 +229,35 @@ public class ApiServlet extends HttpServlet {
         } 
     }
 
+    /**
+     * Gets all results of current user from DB.
+     * 
+     * @param req Request
+     * @param resp Respond to a question
+     * @exception IOException if any IOException occured
+     */
     private void getResults(HttpServletRequest req, HttpServletResponse resp) 
             throws IOException {
+        
+        // Gets user ID for which save the computation result.
         int userId = (int)req.getSession().getAttribute("userid");
         
         LinkedList<Result> results = new LinkedList<>();
         
         try {
             Statement statement = connection.createStatement();
+            
+            // Query all results of current user from DB.
             ResultSet rs = statement.executeQuery("SELECT * FROM Results WHERE userid = " + userId);
             
+            // Iterate result set and add every to the results list.
             while(rs.next()){
                 results.add(new Result(rs));
             }
             
-            // Create and send a response.
+            rs.close();
+            
+            // Create and send a response with results of current user.
             PrintWriter out = resp.getWriter();
             out.write(new Gson().toJson(results));
             
@@ -234,5 +265,23 @@ public class ApiServlet extends HttpServlet {
             // Inform about caller about error if any occured
             resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage());
         }
+    }
+    
+    /**
+     * Cleans up the servlet instance and closes DB connection.
+     */
+    @Override
+    public void destroy(){
+        
+        if(connection == null){
+            return;
+        } 
+        
+        try {
+            connection.close();
+        } catch (SQLException ex) {
+            System.err.println("SQL exception: " + ex.getMessage());
+        }
+        super.destroy();
     }
 }

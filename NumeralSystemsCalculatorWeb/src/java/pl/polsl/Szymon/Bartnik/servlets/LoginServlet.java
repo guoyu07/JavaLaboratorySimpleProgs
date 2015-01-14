@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import pl.polsl.Szymon.Bartnik.helpers.DerbyUtils;
-import static pl.polsl.Szymon.Bartnik.helpers.DerbyUtils.tableAlreadyExists;
 import pl.polsl.Szymon.Bartnik.models.User;
 
 /**
@@ -26,8 +25,12 @@ import pl.polsl.Szymon.Bartnik.models.User;
 @WebServlet("/LoginServlet")
 public final class LoginServlet extends HttpServlet {
     
+    /** Represents DB connection */
     private Connection connection;
     
+    /**
+     * Initialization method invoked when creating instance of the class.
+     */
     @Override
     public void init(){
         
@@ -66,12 +69,16 @@ public final class LoginServlet extends HttpServlet {
             return;
         }
         
+        // Create instance of user
+        User user = new User(userName, password);
+        
+        // Distinct if meaning of the request was registration of logging in.
         switch(submitType){
             case "login":
-                CheckIfCanLogIn(req, resp, userName, password);
+                CheckIfCanLogIn(req, resp, user);
                 break;
             case "register":
-                CheckIfCanRegister(req, resp, userName, password);
+                CheckIfCanRegister(req, resp, user);
                 break;
             default:
                 // If action parameter was not recognized.
@@ -93,6 +100,9 @@ public final class LoginServlet extends HttpServlet {
         doGet(req, resp);
     }
         
+    /**
+     * Cleans up the servlet instance and closes DB connection.
+     */
     @Override
     public void destroy(){
         
@@ -108,6 +118,10 @@ public final class LoginServlet extends HttpServlet {
         super.destroy();
     }
 
+    /**
+     * Gets users. Returns null if connection is broken.
+     * @return users from DB.
+     */
     private LinkedList<User> getUsers() {
         
         if(connection == null){
@@ -118,6 +132,7 @@ public final class LoginServlet extends HttpServlet {
         
         try {
             Statement statement = connection.createStatement();
+            // Gets all users from DB.
             ResultSet rs = statement.executeQuery("SELECT * FROM Users");
             
             while (rs.next()) {
@@ -131,8 +146,17 @@ public final class LoginServlet extends HttpServlet {
         return users;
     }
 
+    /**
+     * Logs in specified user.
+     * 
+     * @param req Request
+     * @param resp Respond to a question
+     * @param loggedUser user to log in
+     * @exception IOException if any IOException occured
+     */
     private void Login(HttpServletRequest req, HttpServletResponse resp, User loggedUser) 
             throws IOException {
+        
         // If authentication was correct, begin establish the session.
         HttpSession session = req.getSession();
         session.setAttribute("userid", loggedUser.getId());
@@ -152,7 +176,15 @@ public final class LoginServlet extends HttpServlet {
         resp.sendRedirect("restricted.jsp");
     }
 
-    private void CheckIfCanLogIn(HttpServletRequest req, HttpServletResponse resp, String userName, String password) 
+    /**
+     * Checks if specified user can log in (validation).
+     * 
+     * @param req Request
+     * @param resp Respond to a question
+     * @param user user to log in
+     * @throws IOException if any IOException occured
+     */
+    private void CheckIfCanLogIn(HttpServletRequest req, HttpServletResponse resp, User user) 
             throws IOException {
         
         LinkedList<User> users = getUsers();
@@ -164,7 +196,7 @@ public final class LoginServlet extends HttpServlet {
         
         // Checks if the credentials are correct for any user in the authorized users list.
         User loggedUser = users.stream()
-                .filter(x -> x.getUserName().equals(userName) && x.getPassword().equals(password))
+                .filter(x -> x.getUserName().equals(user.getUserName()) && x.getPassword().equals(user.getPassword()))
                 .findFirst()
                 .orElse(null);
         
@@ -174,10 +206,19 @@ public final class LoginServlet extends HttpServlet {
             return;
         }
         
+        // Login if precondition fulfilled.
         Login(req, resp, loggedUser);
     }
 
-    private void CheckIfCanRegister(HttpServletRequest req, HttpServletResponse resp, String userName, String password) 
+    /**
+     * Checks if specified user can be registered (validation).
+     * 
+     * @param req Request
+     * @param resp Respond to a question
+     * @param user user to register
+     * @throws IOException if any IOException occured
+     */
+    private void CheckIfCanRegister(HttpServletRequest req, HttpServletResponse resp, User user) 
             throws IOException {
         
         LinkedList<User> users = getUsers();
@@ -189,7 +230,7 @@ public final class LoginServlet extends HttpServlet {
         
         // Checks if the credentials are correct for any user in the authorized users list.
         User loggedUser = users.stream()
-                .filter(x -> x.getUserName().equals(userName))
+                .filter(x -> x.getUserName().equals(user.getUserName()))
                 .findFirst()
                 .orElse(null);
         
@@ -198,22 +239,32 @@ public final class LoginServlet extends HttpServlet {
             return;
         }
         
-        Register(req, resp, userName, password);
+        // Register if precondition fulfilled.
+        Register(req, resp, user);
     }
 
-    private void Register(HttpServletRequest req, HttpServletResponse resp, String userName, String password) 
+    /**
+     * Registers specified users and log him in.
+     * 
+     * @param req Request
+     * @param resp Respond to a question
+     * @param user user to register
+     * @throws IOException if any IOException occured
+     */
+    private void Register(HttpServletRequest req, HttpServletResponse resp, User user) 
             throws IOException {
         
         try {
-            // Tworzymy obiekt wyrażenia
             Statement statement = connection.createStatement();
-            statement.executeUpdate("INSERT INTO Users(username, password) VALUES ('" + userName + "', '" + password + "')");
+            // Add new user to the DB.
+            statement.executeUpdate("INSERT INTO Users(username, password) VALUES ('" + user.getUserName() + "', '" + user.getPassword() + "')");
         } catch (SQLException sqle) {
             System.err.println("SQL exception: " + sqle.getMessage());
         } catch (Exception e) {
             System.err.println("Another exception: " + e.getMessage());
         }
         
-        CheckIfCanLogIn(req, resp, userName, password);
+        // Log in immediately after successful registration.
+        CheckIfCanLogIn(req, resp, user);
     }
 }
